@@ -1,0 +1,88 @@
+# Python-generated files
+__pycache__/
+*.py[cod]
+*$py.class
+build/
+dist/
+wheels/
+*.egg-info
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Testing and coverage
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Package management
+uv.lock
+
+# VPC Reporter specific
+.vpc-reporter/
+.vpc-reporter-cache/
+reports/
+generated-diagrams/
+diagrams/
+images/
+
+# Generated files (but allow source files)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.zip
+
+# Generated reports (specific patterns)
+vpc-*.json
+vpc-*.md
+vpc-*.html
+*-report-*.md
+*-data.json
+*-complete.zip
+*-diagram.png
+
+# Scripts with VPC data (keep generic utility scripts)
+scripts/generate_sa_east_complete_report.py
+scripts/generate_sa_east_diagrams.py
+scripts/generate_sa_east_markdown.py
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+/docs/
+/scripts/
