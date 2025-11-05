@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import aioboto3
 import boto3
 from botocore.exceptions import NoCredentialsError, ProfileNotFound
-from typing import Any
 
 from vpc_reporter.aws.exceptions import (
     AWSAuthenticationError,
