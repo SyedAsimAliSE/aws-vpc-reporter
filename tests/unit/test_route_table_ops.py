@@ -27,31 +27,37 @@ def rt_ops(mock_aws_client: AWSClient) -> RouteTableOperations:
 class TestRouteTableOperations:
     """Test Route Table operations class."""
 
-    def test_get_route_tables_success(self, rt_ops: RouteTableOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_route_tables_success(
+        self, rt_ops: RouteTableOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test successful route table retrieval."""
         mock_aws_client.describe_route_tables.return_value = {
-            "RouteTables": [{
-                "RouteTableId": "rtb-123",
-                "VpcId": "vpc-123",
-                "Routes": [
-                    {
-                        "DestinationCidrBlock": "10.0.0.0/16",
-                        "GatewayId": "local",
-                        "State": "active",
-                    },
-                    {
-                        "DestinationCidrBlock": "0.0.0.0/0",
-                        "GatewayId": "igw-123",
-                        "State": "active",
-                    },
-                ],
-                "Associations": [{
-                    "RouteTableAssociationId": "rtbassoc-123",
-                    "SubnetId": "subnet-123",
-                    "Main": False,
-                }],
-                "Tags": [{"Key": "Name", "Value": "Public RT"}],
-            }]
+            "RouteTables": [
+                {
+                    "RouteTableId": "rtb-123",
+                    "VpcId": "vpc-123",
+                    "Routes": [
+                        {
+                            "DestinationCidrBlock": "10.0.0.0/16",
+                            "GatewayId": "local",
+                            "State": "active",
+                        },
+                        {
+                            "DestinationCidrBlock": "0.0.0.0/0",
+                            "GatewayId": "igw-123",
+                            "State": "active",
+                        },
+                    ],
+                    "Associations": [
+                        {
+                            "RouteTableAssociationId": "rtbassoc-123",
+                            "SubnetId": "subnet-123",
+                            "Main": False,
+                        }
+                    ],
+                    "Tags": [{"Key": "Name", "Value": "Public RT"}],
+                }
+            ]
         }
 
         result = rt_ops.get_route_tables("vpc-123")
@@ -62,7 +68,9 @@ class TestRouteTableOperations:
         assert result["route_tables"][0]["name"] == "Public RT"
         assert len(result["route_tables"][0]["routes"]) == 2
 
-    def test_get_route_tables_empty(self, rt_ops: RouteTableOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_route_tables_empty(
+        self, rt_ops: RouteTableOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test VPC with no route tables."""
         mock_aws_client.describe_route_tables.return_value = {"RouteTables": []}
 
@@ -71,18 +79,24 @@ class TestRouteTableOperations:
         assert result["total_count"] == 0
         assert result["route_tables"] == []
 
-    def test_get_route_tables_main(self, rt_ops: RouteTableOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_route_tables_main(
+        self, rt_ops: RouteTableOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test main route table identification."""
         mock_aws_client.describe_route_tables.return_value = {
-            "RouteTables": [{
-                "RouteTableId": "rtb-main",
-                "VpcId": "vpc-123",
-                "Routes": [],
-                "Associations": [{
-                    "RouteTableAssociationId": "rtbassoc-main",
-                    "Main": True,
-                }],
-            }]
+            "RouteTables": [
+                {
+                    "RouteTableId": "rtb-main",
+                    "VpcId": "vpc-123",
+                    "Routes": [],
+                    "Associations": [
+                        {
+                            "RouteTableAssociationId": "rtbassoc-main",
+                            "Main": True,
+                        }
+                    ],
+                }
+            ]
         }
 
         result = rt_ops.get_route_tables("vpc-123")

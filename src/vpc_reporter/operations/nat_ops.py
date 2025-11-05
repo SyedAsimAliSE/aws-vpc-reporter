@@ -42,16 +42,18 @@ class NATGatewayOperations:
             # Parse NAT gateway addresses (CRITICAL for EIP info)
             addresses = []
             for addr in nat.get("NatGatewayAddresses", []):
-                addresses.append({
-                    "allocation_id": addr.get("AllocationId"),
-                    "network_interface_id": addr.get("NetworkInterfaceId"),
-                    "private_ip": addr.get("PrivateIp"),
-                    "public_ip": addr.get("PublicIp"),
-                    "association_id": addr.get("AssociationId"),
-                    "is_primary": addr.get("IsPrimary", False),
-                    "failure_message": addr.get("FailureMessage"),
-                    "status": addr.get("Status"),
-                })
+                addresses.append(
+                    {
+                        "allocation_id": addr.get("AllocationId"),
+                        "network_interface_id": addr.get("NetworkInterfaceId"),
+                        "private_ip": addr.get("PrivateIp"),
+                        "public_ip": addr.get("PublicIp"),
+                        "association_id": addr.get("AssociationId"),
+                        "is_primary": addr.get("IsPrimary", False),
+                        "failure_message": addr.get("FailureMessage"),
+                        "status": addr.get("Status"),
+                    }
+                )
 
             # Extract primary public IP for easy access
             primary_public_ip = None
@@ -60,22 +62,24 @@ class NATGatewayOperations:
                     primary_public_ip = addr["public_ip"]
                     break
 
-            processed_nats.append({
-                "nat_gateway_id": nat["NatGatewayId"],
-                "subnet_id": nat.get("SubnetId"),
-                "vpc_id": nat.get("VpcId"),
-                "state": nat.get("State"),
-                "create_time": nat.get("CreateTime"),
-                "delete_time": nat.get("DeleteTime"),
-                "failure_code": nat.get("FailureCode"),
-                "failure_message": nat.get("FailureMessage"),
-                "connectivity_type": nat.get("ConnectivityType", "public"),
-                "nat_gateway_addresses": addresses,
-                "primary_public_ip": primary_public_ip,
-                "address_count": len(addresses),
-                "tags": nat.get("Tags", []),
-                "name": self._get_tag_value(nat.get("Tags", []), "Name"),
-            })
+            processed_nats.append(
+                {
+                    "nat_gateway_id": nat["NatGatewayId"],
+                    "subnet_id": nat.get("SubnetId"),
+                    "vpc_id": nat.get("VpcId"),
+                    "state": nat.get("State"),
+                    "create_time": nat.get("CreateTime"),
+                    "delete_time": nat.get("DeleteTime"),
+                    "failure_code": nat.get("FailureCode"),
+                    "failure_message": nat.get("FailureMessage"),
+                    "connectivity_type": nat.get("ConnectivityType", "public"),
+                    "nat_gateway_addresses": addresses,
+                    "primary_public_ip": primary_public_ip,
+                    "address_count": len(addresses),
+                    "tags": nat.get("Tags", []),
+                    "name": self._get_tag_value(nat.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_nats)} NAT gateways")
 

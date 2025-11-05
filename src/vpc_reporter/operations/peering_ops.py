@@ -50,7 +50,9 @@ class VPCPeeringOperations:
 
         # Combine and deduplicate
         all_peering = {p["VpcPeeringConnectionId"]: p for p in peering_as_requester}
-        all_peering.update({p["VpcPeeringConnectionId"]: p for p in peering_as_accepter})
+        all_peering.update(
+            {p["VpcPeeringConnectionId"]: p for p in peering_as_accepter}
+        )
         peering_connections = list(all_peering.values())
 
         processed_peering = []
@@ -100,27 +102,33 @@ class VPCPeeringOperations:
             # Parse status
             status = peering.get("Status", {})
 
-            processed_peering.append({
-                "vpc_peering_connection_id": peering["VpcPeeringConnectionId"],
-                "status_code": status.get("Code"),
-                "status_message": status.get("Message"),
-                "expiration_time": peering.get("ExpirationTime"),
-                "requester_vpc": requester_vpc,
-                "accepter_vpc": accepter_vpc,
-                "role": role,
-                "peer_vpc": peer_vpc,
-                "is_cross_account": is_cross_account,
-                "is_cross_region": is_cross_region,
-                "tags": peering.get("Tags", []),
-                "name": self._get_tag_value(peering.get("Tags", []), "Name"),
-            })
+            processed_peering.append(
+                {
+                    "vpc_peering_connection_id": peering["VpcPeeringConnectionId"],
+                    "status_code": status.get("Code"),
+                    "status_message": status.get("Message"),
+                    "expiration_time": peering.get("ExpirationTime"),
+                    "requester_vpc": requester_vpc,
+                    "accepter_vpc": accepter_vpc,
+                    "role": role,
+                    "peer_vpc": peer_vpc,
+                    "is_cross_account": is_cross_account,
+                    "is_cross_region": is_cross_region,
+                    "tags": peering.get("Tags", []),
+                    "name": self._get_tag_value(peering.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_peering)} VPC peering connections")
 
         return {
             "total_count": len(processed_peering),
-            "cross_account_count": len([p for p in processed_peering if p["is_cross_account"]]),
-            "cross_region_count": len([p for p in processed_peering if p["is_cross_region"]]),
+            "cross_account_count": len(
+                [p for p in processed_peering if p["is_cross_account"]]
+            ),
+            "cross_region_count": len(
+                [p for p in processed_peering if p["is_cross_region"]]
+            ),
             "peering_connections": processed_peering,
             "raw_data": peering_connections,
         }

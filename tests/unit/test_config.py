@@ -54,7 +54,7 @@ class TestConfigManager:
 
     def test_load_config_with_defaults(self) -> None:
         """Test loading config with no file (uses defaults)."""
-        with patch.object(Path, 'exists', return_value=False):
+        with patch.object(Path, "exists", return_value=False):
             manager = ConfigManager()
 
             assert manager.config.aws.profile == "default"
@@ -62,35 +62,35 @@ class TestConfigManager:
 
     def test_get_aws_profile(self) -> None:
         """Test getting AWS profile."""
-        with patch.object(Path, 'exists', return_value=False):
+        with patch.object(Path, "exists", return_value=False):
             manager = ConfigManager()
 
             assert manager.get_aws_profile() == "default"
 
     def test_get_default_region(self) -> None:
         """Test getting default region."""
-        with patch.object(Path, 'exists', return_value=False):
+        with patch.object(Path, "exists", return_value=False):
             manager = ConfigManager()
 
             assert manager.get_default_region() == "us-east-1"
 
     def test_get_regions(self) -> None:
         """Test getting available regions."""
-        with patch.object(Path, 'exists', return_value=False):
+        with patch.object(Path, "exists", return_value=False):
             manager = ConfigManager()
 
             assert manager.get_regions() == ["us-east-1"]
 
     def test_is_cache_enabled(self) -> None:
         """Test checking if cache is enabled."""
-        with patch.object(Path, 'exists', return_value=False):
+        with patch.object(Path, "exists", return_value=False):
             manager = ConfigManager()
 
             assert manager.is_cache_enabled() is True
 
     def test_get_cache_ttl(self) -> None:
         """Test getting cache TTL."""
-        with patch.object(Path, 'exists', return_value=False):
+        with patch.object(Path, "exists", return_value=False):
             manager = ConfigManager()
 
             assert manager.get_cache_ttl() == 300
@@ -111,8 +111,8 @@ cache:
   enabled: false
   ttl: 600
 """
-        with patch('builtins.open', mock_open(read_data=yaml_content)):
-            with patch.object(Path, 'exists', return_value=True):
+        with patch("builtins.open", mock_open(read_data=yaml_content)):
+            with patch.object(Path, "exists", return_value=True):
                 manager = ConfigManager(Path("/fake/config.yaml"))
 
                 assert manager.config.aws.profile == "test-profile"

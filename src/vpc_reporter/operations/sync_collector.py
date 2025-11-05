@@ -76,24 +76,44 @@ def collect_all_data_sync(
     # Define all sections
     all_sections = {
         "vpc": lambda: _collect_vpc(vpc_ops, vpc_id, progress),
-        "vpc_attributes": lambda: _collect_vpc_attributes(vpc_attr_ops, vpc_id, progress),
+        "vpc_attributes": lambda: _collect_vpc_attributes(
+            vpc_attr_ops, vpc_id, progress
+        ),
         "subnets": lambda: _collect_subnets(subnet_ops, vpc_id, progress),
-        "route_tables": lambda: _collect_route_tables(route_table_ops, vpc_id, progress),
-        "internet_gateways": lambda: _collect_internet_gateways(igw_ops, vpc_id, progress),
+        "route_tables": lambda: _collect_route_tables(
+            route_table_ops, vpc_id, progress
+        ),
+        "internet_gateways": lambda: _collect_internet_gateways(
+            igw_ops, vpc_id, progress
+        ),
         "nat_gateways": lambda: _collect_nat_gateways(nat_ops, vpc_id, progress),
         "elastic_ips": lambda: _collect_elastic_ips(eip_ops, vpc_id, progress),
-        "security_groups": lambda: _collect_security_groups(security_group_ops, vpc_id, progress),
-        "network_acls": lambda: _collect_network_acls(network_acl_ops, vpc_id, progress),
-        "vpc_endpoints": lambda: _collect_vpc_endpoints(vpc_endpoint_ops, vpc_id, progress),
+        "security_groups": lambda: _collect_security_groups(
+            security_group_ops, vpc_id, progress
+        ),
+        "network_acls": lambda: _collect_network_acls(
+            network_acl_ops, vpc_id, progress
+        ),
+        "vpc_endpoints": lambda: _collect_vpc_endpoints(
+            vpc_endpoint_ops, vpc_id, progress
+        ),
         "vpc_peering": lambda: _collect_vpc_peering(peering_ops, vpc_id, progress),
-        "transit_gateway_attachments": lambda: _collect_transit_gateway_attachments(tgw_ops, vpc_id, progress),
+        "transit_gateway_attachments": lambda: _collect_transit_gateway_attachments(
+            tgw_ops, vpc_id, progress
+        ),
         "vpn_connections": lambda: _collect_vpn_connections(vpn_ops, progress),
         "customer_gateways": lambda: _collect_customer_gateways(cgw_ops, progress),
         "vpn_gateways": lambda: _collect_vpn_gateways(vgw_ops, vpc_id, progress),
-        "dhcp_options": lambda: _collect_dhcp_options(dhcp_ops, dhcp_options_id, progress),
+        "dhcp_options": lambda: _collect_dhcp_options(
+            dhcp_ops, dhcp_options_id, progress
+        ),
         "flow_logs": lambda: _collect_flow_logs(flow_logs_ops, vpc_id, progress),
-        "network_interfaces": lambda: _collect_network_interfaces(eni_ops, vpc_id, progress),
-        "direct_connect_vifs": lambda: _collect_direct_connect_vifs(dx_vif_ops, progress),
+        "network_interfaces": lambda: _collect_network_interfaces(
+            eni_ops, vpc_id, progress
+        ),
+        "direct_connect_vifs": lambda: _collect_direct_connect_vifs(
+            dx_vif_ops, progress
+        ),
     }
 
     # Determine which sections to collect
@@ -155,7 +175,9 @@ def _collect_subnets(
     try:
         data = subnet_ops.get_subnets(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Subnets ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Subnets ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -174,7 +196,9 @@ def _collect_route_tables(
     try:
         data = route_table_ops.get_route_tables(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Route tables ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Route tables ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -193,7 +217,9 @@ def _collect_security_groups(
     try:
         data = security_group_ops.get_security_groups(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Security groups ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Security groups ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -212,7 +238,9 @@ def _collect_network_acls(
     try:
         data = network_acl_ops.get_network_acls(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Network ACLs ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Network ACLs ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -231,7 +259,9 @@ def _collect_internet_gateways(
     try:
         data = igw_ops.get_internet_gateways(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Internet gateways ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Internet gateways ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -250,7 +280,9 @@ def _collect_nat_gateways(
     try:
         data = nat_ops.get_nat_gateways(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ NAT gateways ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ NAT gateways ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -269,7 +301,9 @@ def _collect_elastic_ips(
     try:
         data = eip_ops.get_elastic_ips(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Elastic IPs ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Elastic IPs ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -288,7 +322,9 @@ def _collect_vpc_endpoints(
     try:
         data = vpc_endpoint_ops.get_vpc_endpoints(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ VPC endpoints ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ VPC endpoints ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -302,12 +338,16 @@ def _collect_vpc_peering(
 ) -> dict[str, Any]:
     """Collect VPC peering connection data."""
     if progress:
-        task = progress.add_task("[cyan]Collecting VPC peering connections...", total=None)
+        task = progress.add_task(
+            "[cyan]Collecting VPC peering connections...", total=None
+        )
 
     try:
         data = peering_ops.get_vpc_peering_connections(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ VPC peering ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ VPC peering ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -321,12 +361,17 @@ def _collect_transit_gateway_attachments(
 ) -> dict[str, Any]:
     """Collect Transit Gateway attachment data."""
     if progress:
-        task = progress.add_task("[cyan]Collecting Transit Gateway attachments...", total=None)
+        task = progress.add_task(
+            "[cyan]Collecting Transit Gateway attachments...", total=None
+        )
 
     try:
         data = tgw_ops.get_transit_gateway_attachments(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Transit Gateway attachments ({data['total_count']})")
+            progress.update(
+                task,
+                description=f"[green]✓ Transit Gateway attachments ({data['total_count']})",
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -344,7 +389,9 @@ def _collect_vpn_connections(
     try:
         data = vpn_ops.get_vpn_connections()
         if progress:
-            progress.update(task, description=f"[green]✓ VPN connections ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ VPN connections ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -362,7 +409,9 @@ def _collect_customer_gateways(
     try:
         data = cgw_ops.get_customer_gateways()
         if progress:
-            progress.update(task, description=f"[green]✓ Customer Gateways ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Customer Gateways ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -381,7 +430,9 @@ def _collect_vpn_gateways(
     try:
         data = vgw_ops.get_vpn_gateways(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ VPN Gateways ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ VPN Gateways ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -426,7 +477,9 @@ def _collect_flow_logs(
     try:
         data = flow_logs_ops.get_flow_logs(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ VPC Flow Logs ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ VPC Flow Logs ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -445,7 +498,9 @@ def _collect_network_interfaces(
     try:
         data = eni_ops.get_network_interfaces(vpc_id)
         if progress:
-            progress.update(task, description=f"[green]✓ Network Interfaces ({data['total_count']})")
+            progress.update(
+                task, description=f"[green]✓ Network Interfaces ({data['total_count']})"
+            )
         return {"success": True, "data": data}
     finally:
         if progress:
@@ -482,7 +537,10 @@ def _collect_direct_connect_vifs(
     try:
         data = dx_vif_ops.get_virtual_interfaces()
         if progress:
-            progress.update(task, description=f"[green]✓ Direct Connect VIFs ({data['total_count']})")
+            progress.update(
+                task,
+                description=f"[green]✓ Direct Connect VIFs ({data['total_count']})",
+            )
         return {"success": True, "data": data}
     finally:
         if progress:

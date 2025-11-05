@@ -36,17 +36,19 @@ class CustomerGatewayOperations:
 
         processed_cgws = []
         for cgw in customer_gateways:
-            processed_cgws.append({
-                "customer_gateway_id": cgw["CustomerGatewayId"],
-                "state": cgw.get("State"),
-                "type": cgw.get("Type", "ipsec.1"),
-                "ip_address": cgw.get("IpAddress"),
-                "bgp_asn": cgw.get("BgpAsn"),
-                "device_name": cgw.get("DeviceName"),
-                "certificate_arn": cgw.get("CertificateArn"),
-                "tags": cgw.get("Tags", []),
-                "name": self._get_tag_value(cgw.get("Tags", []), "Name"),
-            })
+            processed_cgws.append(
+                {
+                    "customer_gateway_id": cgw["CustomerGatewayId"],
+                    "state": cgw.get("State"),
+                    "type": cgw.get("Type", "ipsec.1"),
+                    "ip_address": cgw.get("IpAddress"),
+                    "bgp_asn": cgw.get("BgpAsn"),
+                    "device_name": cgw.get("DeviceName"),
+                    "certificate_arn": cgw.get("CertificateArn"),
+                    "tags": cgw.get("Tags", []),
+                    "name": self._get_tag_value(cgw.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_cgws)} customer gateways")
 

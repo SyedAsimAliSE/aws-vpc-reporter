@@ -29,7 +29,9 @@ def vpc_ops(mock_aws_client: AWSClient) -> VPCOperations:
 class TestVPCOperations:
     """Test VPC operations class."""
 
-    def test_list_vpcs_success(self, vpc_ops: VPCOperations, mock_aws_client: AWSClient) -> None:
+    def test_list_vpcs_success(
+        self, vpc_ops: VPCOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test successful VPC listing."""
         mock_aws_client.describe_vpcs.return_value = {
             "Vpcs": [
@@ -49,7 +51,9 @@ class TestVPCOperations:
         assert vpcs[0]["cidr_block"] == "10.0.0.0/16"
         assert vpcs[0]["name"] == "Test VPC"
 
-    def test_list_vpcs_empty(self, vpc_ops: VPCOperations, mock_aws_client: AWSClient) -> None:
+    def test_list_vpcs_empty(
+        self, vpc_ops: VPCOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test listing VPCs when none exist."""
         mock_aws_client.describe_vpcs.return_value = {"Vpcs": []}
 
@@ -57,18 +61,22 @@ class TestVPCOperations:
 
         assert vpcs == []
 
-    def test_get_vpc_details_success(self, vpc_ops: VPCOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpc_details_success(
+        self, vpc_ops: VPCOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test getting VPC details."""
         mock_aws_client.describe_vpcs.return_value = {
-            "Vpcs": [{
-                "VpcId": "vpc-123",
-                "CidrBlock": "10.0.0.0/16",
-                "State": "available",
-                "DhcpOptionsId": "dopt-123",
-                "InstanceTenancy": "default",
-                "IsDefault": False,
-                "Tags": [{"Key": "Name", "Value": "Test VPC"}],
-            }]
+            "Vpcs": [
+                {
+                    "VpcId": "vpc-123",
+                    "CidrBlock": "10.0.0.0/16",
+                    "State": "available",
+                    "DhcpOptionsId": "dopt-123",
+                    "InstanceTenancy": "default",
+                    "IsDefault": False,
+                    "Tags": [{"Key": "Name", "Value": "Test VPC"}],
+                }
+            ]
         }
 
         vpc = vpc_ops.get_vpc_details("vpc-123")
@@ -78,43 +86,59 @@ class TestVPCOperations:
         assert vpc["dhcp_options_id"] == "dopt-123"
         assert vpc["name"] == "Test VPC"
 
-    def test_get_vpc_details_not_found(self, vpc_ops: VPCOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpc_details_not_found(
+        self, vpc_ops: VPCOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test getting details for non-existent VPC."""
         mock_aws_client.describe_vpcs.side_effect = ClientError(
             {"Error": {"Code": "InvalidVpcID.NotFound", "Message": "VPC not found"}},
-            "DescribeVpcs"
+            "DescribeVpcs",
         )
 
         with pytest.raises(ClientError):
             vpc_ops.get_vpc_details("vpc-nonexistent")
 
-    def test_get_vpc_details_no_name_tag(self, vpc_ops: VPCOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpc_details_no_name_tag(
+        self, vpc_ops: VPCOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test VPC without Name tag."""
         mock_aws_client.describe_vpcs.return_value = {
-            "Vpcs": [{
-                "VpcId": "vpc-123",
-                "CidrBlock": "10.0.0.0/16",
-                "State": "available",
-                "Tags": [],
-            }]
+            "Vpcs": [
+                {
+                    "VpcId": "vpc-123",
+                    "CidrBlock": "10.0.0.0/16",
+                    "State": "available",
+                    "Tags": [],
+                }
+            ]
         }
 
         vpc = vpc_ops.get_vpc_details("vpc-123")
 
         assert vpc["name"] is None
 
-    def test_get_vpc_details_multiple_cidrs(self, vpc_ops: VPCOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpc_details_multiple_cidrs(
+        self, vpc_ops: VPCOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test VPC with multiple CIDR blocks."""
         mock_aws_client.describe_vpcs.return_value = {
-            "Vpcs": [{
-                "VpcId": "vpc-123",
-                "CidrBlock": "10.0.0.0/16",
-                "State": "available",
-                "CidrBlockAssociationSet": [
-                    {"CidrBlock": "10.0.0.0/16", "CidrBlockState": {"State": "associated"}},
-                    {"CidrBlock": "10.1.0.0/16", "CidrBlockState": {"State": "associated"}},
-                ],
-            }]
+            "Vpcs": [
+                {
+                    "VpcId": "vpc-123",
+                    "CidrBlock": "10.0.0.0/16",
+                    "State": "available",
+                    "CidrBlockAssociationSet": [
+                        {
+                            "CidrBlock": "10.0.0.0/16",
+                            "CidrBlockState": {"State": "associated"},
+                        },
+                        {
+                            "CidrBlock": "10.1.0.0/16",
+                            "CidrBlockState": {"State": "associated"},
+                        },
+                    ],
+                }
+            ]
         }
 
         vpc = vpc_ops.get_vpc_details("vpc-123")

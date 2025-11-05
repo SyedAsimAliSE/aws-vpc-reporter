@@ -12,7 +12,7 @@ class TestCacheManager:
 
     def test_cache_init(self) -> None:
         """Test cache initialization."""
-        with patch('vpc_reporter.cache.cache.Cache') as mock_cache:
+        with patch("vpc_reporter.cache.cache.Cache") as mock_cache:
             cache = CacheManager()
 
             assert cache.cache is not None
@@ -20,7 +20,7 @@ class TestCacheManager:
 
     def test_cache_init_custom_path(self) -> None:
         """Test cache initialization with custom path."""
-        with patch('vpc_reporter.cache.cache.Cache') as mock_cache:
+        with patch("vpc_reporter.cache.cache.Cache") as mock_cache:
             cache = CacheManager(cache_dir="/tmp/test-cache")
 
             assert cache.cache_dir == "/tmp/test-cache"
@@ -28,7 +28,7 @@ class TestCacheManager:
 
     def test_cache_get_miss(self) -> None:
         """Test cache get with miss."""
-        with patch('vpc_reporter.cache.cache.Cache') as mock_cache_class:
+        with patch("vpc_reporter.cache.cache.Cache") as mock_cache_class:
             mock_cache_instance = MagicMock()
             mock_cache_instance.get.return_value = None
             mock_cache_class.return_value = mock_cache_instance
@@ -41,7 +41,7 @@ class TestCacheManager:
 
     def test_cache_get_hit(self) -> None:
         """Test cache get with hit."""
-        with patch('vpc_reporter.cache.cache.Cache') as mock_cache_class:
+        with patch("vpc_reporter.cache.cache.Cache") as mock_cache_class:
             mock_cache_instance = MagicMock()
             mock_cache_instance.get.return_value = {"data": "cached"}
             mock_cache_class.return_value = mock_cache_instance
@@ -53,7 +53,7 @@ class TestCacheManager:
 
     def test_cache_set(self) -> None:
         """Test cache set."""
-        with patch('vpc_reporter.cache.cache.Cache') as mock_cache_class:
+        with patch("vpc_reporter.cache.cache.Cache") as mock_cache_class:
             mock_cache_instance = MagicMock()
             mock_cache_class.return_value = mock_cache_instance
 
@@ -61,14 +61,12 @@ class TestCacheManager:
             cache.set("test_key", {"data": "value"}, ttl=300)
 
             mock_cache_instance.set.assert_called_once_with(
-                "test_key",
-                {"data": "value"},
-                expire=300
+                "test_key", {"data": "value"}, expire=300
             )
 
     def test_cache_clear(self) -> None:
         """Test cache clear."""
-        with patch('vpc_reporter.cache.cache.Cache') as mock_cache_class:
+        with patch("vpc_reporter.cache.cache.Cache") as mock_cache_class:
             mock_cache_instance = MagicMock()
             mock_cache_class.return_value = mock_cache_instance
 
@@ -79,7 +77,7 @@ class TestCacheManager:
 
     def test_cache_close(self) -> None:
         """Test cache close."""
-        with patch('vpc_reporter.cache.cache.Cache') as mock_cache_class:
+        with patch("vpc_reporter.cache.cache.Cache") as mock_cache_class:
             mock_cache_instance = MagicMock()
             mock_cache_class.return_value = mock_cache_instance
 

@@ -27,29 +27,33 @@ def vpn_ops(mock_aws_client: AWSClient) -> VPNConnectionOperations:
 class TestVPNConnectionOperations:
     """Test VPN Connection operations class."""
 
-    def test_get_vpn_connections_success(self, vpn_ops: VPNConnectionOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpn_connections_success(
+        self, vpn_ops: VPNConnectionOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test successful VPN connection retrieval."""
         mock_aws_client.describe_vpn_connections.return_value = {
-            "VpnConnections": [{
-                "VpnConnectionId": "vpn-123",
-                "State": "available",
-                "Type": "ipsec.1",
-                "CustomerGatewayId": "cgw-123",
-                "VpnGatewayId": "vgw-123",
-                "VgwTelemetry": [
-                    {
-                        "OutsideIpAddress": "52.1.2.3",
-                        "Status": "UP",
-                        "LastStatusChange": "2024-01-01T00:00:00Z",
-                    },
-                    {
-                        "OutsideIpAddress": "52.1.2.4",
-                        "Status": "UP",
-                        "LastStatusChange": "2024-01-01T00:00:00Z",
-                    },
-                ],
-                "Tags": [{"Key": "Name", "Value": "Site-to-Site VPN"}],
-            }]
+            "VpnConnections": [
+                {
+                    "VpnConnectionId": "vpn-123",
+                    "State": "available",
+                    "Type": "ipsec.1",
+                    "CustomerGatewayId": "cgw-123",
+                    "VpnGatewayId": "vgw-123",
+                    "VgwTelemetry": [
+                        {
+                            "OutsideIpAddress": "52.1.2.3",
+                            "Status": "UP",
+                            "LastStatusChange": "2024-01-01T00:00:00Z",
+                        },
+                        {
+                            "OutsideIpAddress": "52.1.2.4",
+                            "Status": "UP",
+                            "LastStatusChange": "2024-01-01T00:00:00Z",
+                        },
+                    ],
+                    "Tags": [{"Key": "Name", "Value": "Site-to-Site VPN"}],
+                }
+            ]
         }
 
         result = vpn_ops.get_vpn_connections()
@@ -61,7 +65,9 @@ class TestVPNConnectionOperations:
         assert result["vpn_connections"][0]["name"] == "Site-to-Site VPN"
         assert len(result["vpn_connections"][0]["vgw_telemetry"]) == 2
 
-    def test_get_vpn_connections_empty(self, vpn_ops: VPNConnectionOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpn_connections_empty(
+        self, vpn_ops: VPNConnectionOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test no VPN connections."""
         mock_aws_client.describe_vpn_connections.return_value = {"VpnConnections": []}
 
@@ -70,18 +76,22 @@ class TestVPNConnectionOperations:
         assert result["total_count"] == 0
         assert result["vpn_connections"] == []
 
-    def test_get_vpn_connections_tunnel_status(self, vpn_ops: VPNConnectionOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpn_connections_tunnel_status(
+        self, vpn_ops: VPNConnectionOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test VPN tunnel status parsing."""
         mock_aws_client.describe_vpn_connections.return_value = {
-            "VpnConnections": [{
-                "VpnConnectionId": "vpn-mixed",
-                "State": "available",
-                "Type": "ipsec.1",
-                "VgwTelemetry": [
-                    {"OutsideIpAddress": "52.1.2.3", "Status": "UP"},
-                    {"OutsideIpAddress": "52.1.2.4", "Status": "DOWN"},
-                ],
-            }]
+            "VpnConnections": [
+                {
+                    "VpnConnectionId": "vpn-mixed",
+                    "State": "available",
+                    "Type": "ipsec.1",
+                    "VgwTelemetry": [
+                        {"OutsideIpAddress": "52.1.2.3", "Status": "UP"},
+                        {"OutsideIpAddress": "52.1.2.4", "Status": "DOWN"},
+                    ],
+                }
+            ]
         }
 
         result = vpn_ops.get_vpn_connections()

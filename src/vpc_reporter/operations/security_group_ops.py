@@ -45,21 +45,23 @@ class SecurityGroupOperations:
             # Parse outbound rules with full details
             outbound_rules = self._parse_rules(sg.get("IpPermissionsEgress", []))
 
-            processed_sgs.append({
-                "group_id": sg["GroupId"],
-                "group_name": sg["GroupName"],
-                "description": sg.get("Description", ""),
-                "vpc_id": sg.get("VpcId"),
-                "owner_id": sg.get("OwnerId"),
-                "inbound_rules_count": len(inbound_rules),
-                "outbound_rules_count": len(outbound_rules),
-                "inbound_rules": inbound_rules,
-                "outbound_rules": outbound_rules,
-                "inbound_rules_raw": sg.get("IpPermissions", []),
-                "outbound_rules_raw": sg.get("IpPermissionsEgress", []),
-                "tags": sg.get("Tags", []),
-                "name": self._get_tag_value(sg.get("Tags", []), "Name"),
-            })
+            processed_sgs.append(
+                {
+                    "group_id": sg["GroupId"],
+                    "group_name": sg["GroupName"],
+                    "description": sg.get("Description", ""),
+                    "vpc_id": sg.get("VpcId"),
+                    "owner_id": sg.get("OwnerId"),
+                    "inbound_rules_count": len(inbound_rules),
+                    "outbound_rules_count": len(outbound_rules),
+                    "inbound_rules": inbound_rules,
+                    "outbound_rules": outbound_rules,
+                    "inbound_rules_raw": sg.get("IpPermissions", []),
+                    "outbound_rules_raw": sg.get("IpPermissionsEgress", []),
+                    "tags": sg.get("Tags", []),
+                    "name": self._get_tag_value(sg.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_sgs)} security groups")
 
@@ -98,43 +100,51 @@ class SecurityGroupOperations:
 
             # Parse IPv4 ranges
             for ip_range in perm.get("IpRanges", []):
-                parsed_rules.append({
-                    "type": "IPv4",
-                    "protocol": protocol_name,
-                    "port_range": port_range,
-                    "source": ip_range.get("CidrIp", ""),
-                    "description": ip_range.get("Description", ""),
-                })
+                parsed_rules.append(
+                    {
+                        "type": "IPv4",
+                        "protocol": protocol_name,
+                        "port_range": port_range,
+                        "source": ip_range.get("CidrIp", ""),
+                        "description": ip_range.get("Description", ""),
+                    }
+                )
 
             # Parse IPv6 ranges
             for ipv6_range in perm.get("Ipv6Ranges", []):
-                parsed_rules.append({
-                    "type": "IPv6",
-                    "protocol": protocol_name,
-                    "port_range": port_range,
-                    "source": ipv6_range.get("CidrIpv6", ""),
-                    "description": ipv6_range.get("Description", ""),
-                })
+                parsed_rules.append(
+                    {
+                        "type": "IPv6",
+                        "protocol": protocol_name,
+                        "port_range": port_range,
+                        "source": ipv6_range.get("CidrIpv6", ""),
+                        "description": ipv6_range.get("Description", ""),
+                    }
+                )
 
             # Parse prefix lists
             for prefix_list in perm.get("PrefixListIds", []):
-                parsed_rules.append({
-                    "type": "Prefix List",
-                    "protocol": protocol_name,
-                    "port_range": port_range,
-                    "source": prefix_list.get("PrefixListId", ""),
-                    "description": prefix_list.get("Description", ""),
-                })
+                parsed_rules.append(
+                    {
+                        "type": "Prefix List",
+                        "protocol": protocol_name,
+                        "port_range": port_range,
+                        "source": prefix_list.get("PrefixListId", ""),
+                        "description": prefix_list.get("Description", ""),
+                    }
+                )
 
             # Parse referenced security groups
             for user_id_group in perm.get("UserIdGroupPairs", []):
-                parsed_rules.append({
-                    "type": "Security Group",
-                    "protocol": protocol_name,
-                    "port_range": port_range,
-                    "source": user_id_group.get("GroupId", ""),
-                    "description": user_id_group.get("Description", ""),
-                })
+                parsed_rules.append(
+                    {
+                        "type": "Security Group",
+                        "protocol": protocol_name,
+                        "port_range": port_range,
+                        "source": user_id_group.get("GroupId", ""),
+                        "description": user_id_group.get("Description", ""),
+                    }
+                )
 
         return parsed_rules
 

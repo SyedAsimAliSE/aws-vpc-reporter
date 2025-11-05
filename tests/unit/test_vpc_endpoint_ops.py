@@ -27,18 +27,22 @@ def vpce_ops(mock_aws_client: AWSClient) -> VPCEndpointOperations:
 class TestVPCEndpointOperations:
     """Test VPC Endpoint operations class."""
 
-    def test_get_vpc_endpoints_success(self, vpce_ops: VPCEndpointOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpc_endpoints_success(
+        self, vpce_ops: VPCEndpointOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test successful VPC endpoint retrieval."""
         mock_aws_client.describe_vpc_endpoints.return_value = {
-            "VpcEndpoints": [{
-                "VpcEndpointId": "vpce-123",
-                "VpcId": "vpc-123",
-                "ServiceName": "com.amazonaws.us-east-1.s3",
-                "State": "available",
-                "VpcEndpointType": "Gateway",
-                "RouteTableIds": ["rtb-123"],
-                "Tags": [{"Key": "Name", "Value": "S3 Endpoint"}],
-            }]
+            "VpcEndpoints": [
+                {
+                    "VpcEndpointId": "vpce-123",
+                    "VpcId": "vpc-123",
+                    "ServiceName": "com.amazonaws.us-east-1.s3",
+                    "State": "available",
+                    "VpcEndpointType": "Gateway",
+                    "RouteTableIds": ["rtb-123"],
+                    "Tags": [{"Key": "Name", "Value": "S3 Endpoint"}],
+                }
+            ]
         }
 
         result = vpce_ops.get_vpc_endpoints("vpc-123")
@@ -46,10 +50,14 @@ class TestVPCEndpointOperations:
         assert result["total_count"] == 1
         assert len(result["vpc_endpoints"]) == 1
         assert result["vpc_endpoints"][0]["vpc_endpoint_id"] == "vpce-123"
-        assert result["vpc_endpoints"][0]["service_name"] == "com.amazonaws.us-east-1.s3"
+        assert (
+            result["vpc_endpoints"][0]["service_name"] == "com.amazonaws.us-east-1.s3"
+        )
         assert result["vpc_endpoints"][0]["name"] == "S3 Endpoint"
 
-    def test_get_vpc_endpoints_empty(self, vpce_ops: VPCEndpointOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpc_endpoints_empty(
+        self, vpce_ops: VPCEndpointOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test VPC with no endpoints."""
         mock_aws_client.describe_vpc_endpoints.return_value = {"VpcEndpoints": []}
 
@@ -58,18 +66,22 @@ class TestVPCEndpointOperations:
         assert result["total_count"] == 0
         assert result["vpc_endpoints"] == []
 
-    def test_get_vpc_endpoints_interface(self, vpce_ops: VPCEndpointOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_vpc_endpoints_interface(
+        self, vpce_ops: VPCEndpointOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test interface VPC endpoint."""
         mock_aws_client.describe_vpc_endpoints.return_value = {
-            "VpcEndpoints": [{
-                "VpcEndpointId": "vpce-interface",
-                "VpcId": "vpc-123",
-                "ServiceName": "com.amazonaws.us-east-1.ec2",
-                "State": "available",
-                "VpcEndpointType": "Interface",
-                "SubnetIds": ["subnet-123"],
-                "NetworkInterfaceIds": ["eni-123"],
-            }]
+            "VpcEndpoints": [
+                {
+                    "VpcEndpointId": "vpce-interface",
+                    "VpcId": "vpc-123",
+                    "ServiceName": "com.amazonaws.us-east-1.ec2",
+                    "State": "available",
+                    "VpcEndpointType": "Interface",
+                    "SubnetIds": ["subnet-123"],
+                    "NetworkInterfaceIds": ["eni-123"],
+                }
+            ]
         }
 
         result = vpce_ops.get_vpc_endpoints("vpc-123")

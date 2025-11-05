@@ -46,60 +46,71 @@ class CostAnalyzer:
         if nat_cost > 0:
             cost_breakdown["monthly_costs"]["nat_gateways"] = nat_cost
             cost_breakdown["total_monthly_cost"] += nat_cost
-            cost_breakdown["cost_drivers"].append({
-                "resource": "NAT Gateways",
-                "monthly_cost": nat_cost,
-                "description": "NAT Gateway hourly charges + data processing",
-            })
+            cost_breakdown["cost_drivers"].append(
+                {
+                    "resource": "NAT Gateways",
+                    "monthly_cost": nat_cost,
+                    "description": "NAT Gateway hourly charges + data processing",
+                }
+            )
 
         # Analyze VPN costs
         vpn_cost = self._analyze_vpn_costs(sections.get("vpn_connections", {}))
         if vpn_cost > 0:
             cost_breakdown["monthly_costs"]["vpn_connections"] = vpn_cost
             cost_breakdown["total_monthly_cost"] += vpn_cost
-            cost_breakdown["cost_drivers"].append({
-                "resource": "VPN Connections",
-                "monthly_cost": vpn_cost,
-                "description": "VPN connection hourly charges",
-            })
+            cost_breakdown["cost_drivers"].append(
+                {
+                    "resource": "VPN Connections",
+                    "monthly_cost": vpn_cost,
+                    "description": "VPN connection hourly charges",
+                }
+            )
 
         # Analyze Transit Gateway costs
-        tgw_cost = self._analyze_tgw_costs(sections.get("transit_gateway_attachments", {}))
+        tgw_cost = self._analyze_tgw_costs(
+            sections.get("transit_gateway_attachments", {})
+        )
         if tgw_cost > 0:
             cost_breakdown["monthly_costs"]["transit_gateway"] = tgw_cost
             cost_breakdown["total_monthly_cost"] += tgw_cost
-            cost_breakdown["cost_drivers"].append({
-                "resource": "Transit Gateway",
-                "monthly_cost": tgw_cost,
-                "description": "TGW attachment hourly charges + data processing",
-            })
+            cost_breakdown["cost_drivers"].append(
+                {
+                    "resource": "Transit Gateway",
+                    "monthly_cost": tgw_cost,
+                    "description": "TGW attachment hourly charges + data processing",
+                }
+            )
 
         # Analyze VPC Endpoint costs
         endpoint_cost = self._analyze_endpoint_costs(sections.get("vpc_endpoints", {}))
         if endpoint_cost > 0:
             cost_breakdown["monthly_costs"]["vpc_endpoints"] = endpoint_cost
             cost_breakdown["total_monthly_cost"] += endpoint_cost
-            cost_breakdown["cost_drivers"].append({
-                "resource": "VPC Endpoints",
-                "monthly_cost": endpoint_cost,
-                "description": "Interface endpoint hourly charges",
-            })
+            cost_breakdown["cost_drivers"].append(
+                {
+                    "resource": "VPC Endpoints",
+                    "monthly_cost": endpoint_cost,
+                    "description": "Interface endpoint hourly charges",
+                }
+            )
 
         # Analyze Elastic IP costs
         eip_cost = self._analyze_eip_costs(sections.get("elastic_ips", {}))
         if eip_cost > 0:
             cost_breakdown["monthly_costs"]["elastic_ips"] = eip_cost
             cost_breakdown["total_monthly_cost"] += eip_cost
-            cost_breakdown["cost_drivers"].append({
-                "resource": "Elastic IPs",
-                "monthly_cost": eip_cost,
-                "description": "Unassociated Elastic IP charges",
-            })
+            cost_breakdown["cost_drivers"].append(
+                {
+                    "resource": "Elastic IPs",
+                    "monthly_cost": eip_cost,
+                    "description": "Unassociated Elastic IP charges",
+                }
+            )
 
         # Sort cost drivers by cost (highest first)
         cost_breakdown["cost_drivers"].sort(
-            key=lambda x: x["monthly_cost"],
-            reverse=True
+            key=lambda x: x["monthly_cost"], reverse=True
         )
 
         logger.info(f"Total monthly cost: ${cost_breakdown['total_monthly_cost']:.2f}")
@@ -128,7 +139,9 @@ class CostAnalyzer:
         nat_count = len(nat_gateways)
         monthly_cost = nat_count * hourly_rate * hours_per_month
 
-        logger.debug(f"NAT Gateway cost: {nat_count} gateways × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}")
+        logger.debug(
+            f"NAT Gateway cost: {nat_count} gateways × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}"
+        )
 
         return monthly_cost
 
@@ -153,7 +166,9 @@ class CostAnalyzer:
         vpn_count = len(vpn_connections)
         monthly_cost = vpn_count * hourly_rate * hours_per_month
 
-        logger.debug(f"VPN cost: {vpn_count} connections × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}")
+        logger.debug(
+            f"VPN cost: {vpn_count} connections × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}"
+        )
 
         return monthly_cost
 
@@ -179,7 +194,9 @@ class CostAnalyzer:
         attachment_count = len(attachments)
         monthly_cost = attachment_count * hourly_rate * hours_per_month
 
-        logger.debug(f"TGW cost: {attachment_count} attachments × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}")
+        logger.debug(
+            f"TGW cost: {attachment_count} attachments × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}"
+        )
 
         return monthly_cost
 
@@ -199,8 +216,7 @@ class CostAnalyzer:
         # Only Interface endpoints have hourly charges
         # Gateway endpoints (S3, DynamoDB) are free
         interface_endpoints = [
-            ep for ep in endpoints
-            if ep.get("vpc_endpoint_type") == "Interface"
+            ep for ep in endpoints if ep.get("vpc_endpoint_type") == "Interface"
         ]
 
         if not interface_endpoints:
@@ -213,9 +229,13 @@ class CostAnalyzer:
         avg_azs_per_endpoint = 2  # Typical deployment
 
         endpoint_count = len(interface_endpoints)
-        monthly_cost = endpoint_count * avg_azs_per_endpoint * hourly_rate_per_az * hours_per_month
+        monthly_cost = (
+            endpoint_count * avg_azs_per_endpoint * hourly_rate_per_az * hours_per_month
+        )
 
-        logger.debug(f"VPC Endpoint cost: {endpoint_count} endpoints × {avg_azs_per_endpoint} AZs × ${hourly_rate_per_az}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}")
+        logger.debug(
+            f"VPC Endpoint cost: {endpoint_count} endpoints × {avg_azs_per_endpoint} AZs × ${hourly_rate_per_az}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}"
+        )
 
         return monthly_cost
 
@@ -234,10 +254,7 @@ class CostAnalyzer:
 
         # Only unassociated EIPs are charged
         # $0.005 per hour = $3.65/month per unassociated EIP
-        unassociated_eips = [
-            eip for eip in eips
-            if not eip.get("association_id")
-        ]
+        unassociated_eips = [eip for eip in eips if not eip.get("association_id")]
 
         if not unassociated_eips:
             return 0.0
@@ -248,11 +265,15 @@ class CostAnalyzer:
         eip_count = len(unassociated_eips)
         monthly_cost = eip_count * hourly_rate * hours_per_month
 
-        logger.debug(f"Unassociated EIP cost: {eip_count} EIPs × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}")
+        logger.debug(
+            f"Unassociated EIP cost: {eip_count} EIPs × ${hourly_rate}/hr × {hours_per_month}hrs = ${monthly_cost:.2f}"
+        )
 
         return monthly_cost
 
-    def generate_cost_recommendations(self, cost_breakdown: dict[str, Any]) -> list[str]:
+    def generate_cost_recommendations(
+        self, cost_breakdown: dict[str, Any]
+    ) -> list[str]:
         """Generate cost optimization recommendations.
 
         Args:

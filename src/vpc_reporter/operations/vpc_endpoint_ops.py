@@ -44,52 +44,70 @@ class VPCEndpointOperations:
             # Parse security groups (Interface endpoints only)
             security_groups = []
             for sg in endpoint.get("Groups", []):
-                security_groups.append({
-                    "group_id": sg.get("GroupId"),
-                    "group_name": sg.get("GroupName"),
-                })
+                security_groups.append(
+                    {
+                        "group_id": sg.get("GroupId"),
+                        "group_name": sg.get("GroupName"),
+                    }
+                )
 
             # Parse DNS entries (Interface endpoints only)
             dns_entries = []
             for dns in endpoint.get("DnsEntries", []):
-                dns_entries.append({
-                    "dns_name": dns.get("DnsName"),
-                    "hosted_zone_id": dns.get("HostedZoneId"),
-                })
+                dns_entries.append(
+                    {
+                        "dns_name": dns.get("DnsName"),
+                        "hosted_zone_id": dns.get("HostedZoneId"),
+                    }
+                )
 
             # Extract service name (e.g., "s3" from "com.amazonaws.us-east-1.s3")
             service_name = endpoint.get("ServiceName", "")
-            service_short_name = service_name.split(".")[-1] if service_name else "unknown"
+            service_short_name = (
+                service_name.split(".")[-1] if service_name else "unknown"
+            )
 
-            processed_endpoints.append({
-                "vpc_endpoint_id": endpoint["VpcEndpointId"],
-                "vpc_endpoint_type": endpoint_type,
-                "vpc_id": endpoint.get("VpcId"),
-                "service_name": service_name,
-                "service_short_name": service_short_name,
-                "state": endpoint.get("State"),
-                "policy_document": endpoint.get("PolicyDocument"),
-                # Gateway endpoint fields
-                "route_table_ids": endpoint.get("RouteTableIds", []),
-                # Interface endpoint fields
-                "subnet_ids": endpoint.get("SubnetIds", []),
-                "security_groups": security_groups,
-                "network_interface_ids": endpoint.get("NetworkInterfaceIds", []),
-                "dns_entries": dns_entries,
-                "private_dns_enabled": endpoint.get("PrivateDnsEnabled", False),
-                # Common fields
-                "requester_managed": endpoint.get("RequesterManaged", False),
-                "owner_id": endpoint.get("OwnerId"),
-                "creation_timestamp": endpoint.get("CreationTimestamp"),
-                "last_error": endpoint.get("LastError"),
-                "tags": endpoint.get("Tags", []),
-                "name": self._get_tag_value(endpoint.get("Tags", []), "Name"),
-            })
+            processed_endpoints.append(
+                {
+                    "vpc_endpoint_id": endpoint["VpcEndpointId"],
+                    "vpc_endpoint_type": endpoint_type,
+                    "vpc_id": endpoint.get("VpcId"),
+                    "service_name": service_name,
+                    "service_short_name": service_short_name,
+                    "state": endpoint.get("State"),
+                    "policy_document": endpoint.get("PolicyDocument"),
+                    # Gateway endpoint fields
+                    "route_table_ids": endpoint.get("RouteTableIds", []),
+                    # Interface endpoint fields
+                    "subnet_ids": endpoint.get("SubnetIds", []),
+                    "security_groups": security_groups,
+                    "network_interface_ids": endpoint.get("NetworkInterfaceIds", []),
+                    "dns_entries": dns_entries,
+                    "private_dns_enabled": endpoint.get("PrivateDnsEnabled", False),
+                    # Common fields
+                    "requester_managed": endpoint.get("RequesterManaged", False),
+                    "owner_id": endpoint.get("OwnerId"),
+                    "creation_timestamp": endpoint.get("CreationTimestamp"),
+                    "last_error": endpoint.get("LastError"),
+                    "tags": endpoint.get("Tags", []),
+                    "name": self._get_tag_value(endpoint.get("Tags", []), "Name"),
+                }
+            )
 
         # Count by type
-        interface_count = len([e for e in processed_endpoints if e["vpc_endpoint_type"] == "Interface"])
-        gateway_count = len([e for e in processed_endpoints if e["vpc_endpoint_type"] == "Gateway"])
-        gwlb_count = len([e for e in processed_endpoints if e["vpc_endpoint_type"] == "GatewayLoadBalancer"])
+        interface_count = len(
+            [e for e in processed_endpoints if e["vpc_endpoint_type"] == "Interface"]
+        )
+        gateway_count = len(
+            [e for e in processed_endpoints if e["vpc_endpoint_type"] == "Gateway"]
+        )
+        gwlb_count = len(
+            [
+                e
+                for e in processed_endpoints
+                if e["vpc_endpoint_type"] == "GatewayLoadBalancer"
+            ]
+        )
 
         logger.info(f"Found {len(processed_endpoints)} VPC endpoints")
 

@@ -21,13 +21,15 @@ def render_console_output(console: Console, data: dict[str, Any]) -> None:
     sections = data.get("sections", {})
 
     # Header
-    console.print(Panel(
-        f"[bold cyan]VPC ID:[/] {vpc_id}\n"
-        f"[bold cyan]Region:[/] {region}\n"
-        f"[bold cyan]Sections:[/] {len(sections)}",
-        title="[bold]VPC Network Report[/bold]",
-        border_style="green"
-    ))
+    console.print(
+        Panel(
+            f"[bold cyan]VPC ID:[/] {vpc_id}\n"
+            f"[bold cyan]Region:[/] {region}\n"
+            f"[bold cyan]Sections:[/] {len(sections)}",
+            title="[bold]VPC Network Report[/bold]",
+            border_style="green",
+        )
+    )
 
     # VPC Overview
     if "vpc" in sections:
@@ -71,7 +73,9 @@ def render_console_output(console: Console, data: dict[str, Any]) -> None:
 
     # Transit Gateway Attachments
     if "transit_gateway_attachments" in sections:
-        _render_transit_gateway_section(console, sections["transit_gateway_attachments"])
+        _render_transit_gateway_section(
+            console, sections["transit_gateway_attachments"]
+        )
 
     # VPN Connections
     if "vpn_connections" in sections:
@@ -152,7 +156,9 @@ def _render_subnets_section(console: Console, section_data: dict[str, Any]) -> N
     console.print(table)
 
 
-def _render_route_tables_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_route_tables_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render route tables section."""
     if not section_data.get("success"):
         console.print("[red]✗ Route Tables: Error[/red]")
@@ -165,12 +171,16 @@ def _render_route_tables_section(console: Console, section_data: dict[str, Any])
 
     for rt in route_tables:
         rt_type = "Main" if rt["is_main"] else "Custom"
-        console.print(f"\n  [cyan]{rt['route_table_id']}[/cyan] - {rt.get('name', '<No Name>')} ({rt_type})")
+        console.print(
+            f"\n  [cyan]{rt['route_table_id']}[/cyan] - {rt.get('name', '<No Name>')} ({rt_type})"
+        )
         console.print(f"    Associated Subnets: {len(rt['associated_subnets'])}")
         console.print(f"    Routes: {len(rt['routes'])}")
 
 
-def _render_security_groups_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_security_groups_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render security groups section."""
     if not section_data.get("success"):
         console.print("[red]✗ Security Groups: Error[/red]")
@@ -193,7 +203,11 @@ def _render_security_groups_section(console: Console, section_data: dict[str, An
         table.add_row(
             sg["group_id"],
             sg.get("name", sg["group_name"]),
-            sg["description"][:50] + "..." if len(sg["description"]) > 50 else sg["description"],
+            (
+                sg["description"][:50] + "..."
+                if len(sg["description"]) > 50
+                else sg["description"]
+            ),
             str(sg["inbound_rules_count"]),
             str(sg["outbound_rules_count"]),
         )
@@ -202,7 +216,9 @@ def _render_security_groups_section(console: Console, section_data: dict[str, An
 
     # Detailed rules for each security group
     for sg in security_groups:
-        console.print(f"\n[bold cyan]{sg['group_id']}[/bold cyan] - {sg.get('name', sg['group_name'])}")
+        console.print(
+            f"\n[bold cyan]{sg['group_id']}[/bold cyan] - {sg.get('name', sg['group_name'])}"
+        )
 
         # Inbound rules
         if sg["inbound_rules"]:
@@ -219,13 +235,23 @@ def _render_security_groups_section(console: Console, section_data: dict[str, An
                     rule["type"],
                     rule["protocol"],
                     str(rule["port_range"]),
-                    rule["source"][:40] + "..." if len(rule["source"]) > 40 else rule["source"],
-                    rule.get("description", "")[:30] + "..." if len(rule.get("description", "")) > 30 else rule.get("description", ""),
+                    (
+                        rule["source"][:40] + "..."
+                        if len(rule["source"]) > 40
+                        else rule["source"]
+                    ),
+                    (
+                        rule.get("description", "")[:30] + "..."
+                        if len(rule.get("description", "")) > 30
+                        else rule.get("description", "")
+                    ),
                 )
 
             console.print(rules_table)
             if len(sg["inbound_rules"]) > 10:
-                console.print(f"  [dim]... and {len(sg['inbound_rules']) - 10} more rules[/dim]")
+                console.print(
+                    f"  [dim]... and {len(sg['inbound_rules']) - 10} more rules[/dim]"
+                )
         else:
             console.print("  [dim]No inbound rules[/dim]")
 
@@ -244,18 +270,30 @@ def _render_security_groups_section(console: Console, section_data: dict[str, An
                     rule["type"],
                     rule["protocol"],
                     str(rule["port_range"]),
-                    rule["source"][:40] + "..." if len(rule["source"]) > 40 else rule["source"],
-                    rule.get("description", "")[:30] + "..." if len(rule.get("description", "")) > 30 else rule.get("description", ""),
+                    (
+                        rule["source"][:40] + "..."
+                        if len(rule["source"]) > 40
+                        else rule["source"]
+                    ),
+                    (
+                        rule.get("description", "")[:30] + "..."
+                        if len(rule.get("description", "")) > 30
+                        else rule.get("description", "")
+                    ),
                 )
 
             console.print(rules_table)
             if len(sg["outbound_rules"]) > 10:
-                console.print(f"  [dim]... and {len(sg['outbound_rules']) - 10} more rules[/dim]")
+                console.print(
+                    f"  [dim]... and {len(sg['outbound_rules']) - 10} more rules[/dim]"
+                )
         else:
             console.print("  [dim]No outbound rules[/dim]")
 
 
-def _render_network_acls_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_network_acls_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render network ACLs section."""
     if not section_data.get("success"):
         console.print("[red]✗ Network ACLs: Error[/red]")
@@ -289,7 +327,9 @@ def _render_network_acls_section(console: Console, section_data: dict[str, Any])
 
     # Detailed rules for each NACL
     for nacl in network_acls:
-        console.print(f"\n[bold cyan]{nacl['network_acl_id']}[/bold cyan] - {nacl.get('name', '<No Name>')}")
+        console.print(
+            f"\n[bold cyan]{nacl['network_acl_id']}[/bold cyan] - {nacl.get('name', '<No Name>')}"
+        )
 
         # Inbound rules
         if nacl["inbound_rules"]:
@@ -308,12 +348,18 @@ def _render_network_acls_section(console: Console, section_data: dict[str, Any])
                     f"[{action_color}]{rule['rule_action']}[/{action_color}]",
                     rule["protocol"],
                     str(rule["port_range"]),
-                    rule["cidr_block"][:30] + "..." if len(rule["cidr_block"]) > 30 else rule["cidr_block"],
+                    (
+                        rule["cidr_block"][:30] + "..."
+                        if len(rule["cidr_block"]) > 30
+                        else rule["cidr_block"]
+                    ),
                 )
 
             console.print(rules_table)
             if len(nacl["inbound_rules"]) > 15:
-                console.print(f"  [dim]... and {len(nacl['inbound_rules']) - 15} more rules[/dim]")
+                console.print(
+                    f"  [dim]... and {len(nacl['inbound_rules']) - 15} more rules[/dim]"
+                )
         else:
             console.print("  [dim]No inbound rules[/dim]")
 
@@ -334,17 +380,25 @@ def _render_network_acls_section(console: Console, section_data: dict[str, Any])
                     f"[{action_color}]{rule['rule_action']}[/{action_color}]",
                     rule["protocol"],
                     str(rule["port_range"]),
-                    rule["cidr_block"][:30] + "..." if len(rule["cidr_block"]) > 30 else rule["cidr_block"],
+                    (
+                        rule["cidr_block"][:30] + "..."
+                        if len(rule["cidr_block"]) > 30
+                        else rule["cidr_block"]
+                    ),
                 )
 
             console.print(rules_table)
             if len(nacl["outbound_rules"]) > 15:
-                console.print(f"  [dim]... and {len(nacl['outbound_rules']) - 15} more rules[/dim]")
+                console.print(
+                    f"  [dim]... and {len(nacl['outbound_rules']) - 15} more rules[/dim]"
+                )
         else:
             console.print("  [dim]No outbound rules[/dim]")
 
 
-def _render_internet_gateways_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_internet_gateways_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render Internet Gateways section."""
     if not section_data.get("success"):
         console.print("[red]✗ Internet Gateways: Error[/red]")
@@ -377,7 +431,9 @@ def _render_internet_gateways_section(console: Console, section_data: dict[str, 
     console.print(table)
 
 
-def _render_nat_gateways_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_nat_gateways_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render NAT Gateways section."""
     if not section_data.get("success"):
         console.print("[red]✗ NAT Gateways: Error[/red]")
@@ -401,7 +457,13 @@ def _render_nat_gateways_section(console: Console, section_data: dict[str, Any])
 
     for nat in nat_gws:
         state_color = "green" if nat["state"] == "available" else "yellow"
-        public_ips = ", ".join([addr["public_ip"] for addr in nat["nat_gateway_addresses"] if addr.get("public_ip")])
+        public_ips = ", ".join(
+            [
+                addr["public_ip"]
+                for addr in nat["nat_gateway_addresses"]
+                if addr.get("public_ip")
+            ]
+        )
         table.add_row(
             nat["nat_gateway_id"],
             nat.get("name", "<No Name>"),
@@ -449,7 +511,9 @@ def _render_elastic_ips_section(console: Console, section_data: dict[str, Any]) 
     console.print(table)
 
 
-def _render_vpc_endpoints_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_vpc_endpoints_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render VPC Endpoints section."""
     if not section_data.get("success"):
         console.print("[red]✗ VPC Endpoints: Error[/red]")
@@ -473,7 +537,9 @@ def _render_vpc_endpoints_section(console: Console, section_data: dict[str, Any]
 
     for ep in endpoints:
         state_color = "green" if ep["state"] == "available" else "yellow"
-        service_name = ep["service_name"].split(".")[-1] if ep.get("service_name") else "-"
+        service_name = (
+            ep["service_name"].split(".")[-1] if ep.get("service_name") else "-"
+        )
         table.add_row(
             ep["vpc_endpoint_id"],
             ep.get("name", "<No Name>"),
@@ -520,7 +586,9 @@ def _render_vpc_peering_section(console: Console, section_data: dict[str, Any]) 
     console.print(table)
 
 
-def _render_transit_gateway_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_transit_gateway_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render Transit Gateway Attachments section."""
     if not section_data.get("success"):
         console.print("[red]✗ Transit Gateway Attachments: Error[/red]")
@@ -556,7 +624,9 @@ def _render_transit_gateway_section(console: Console, section_data: dict[str, An
     console.print(table)
 
 
-def _render_vpn_connections_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_vpn_connections_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render VPN Connections section."""
     if not section_data.get("success"):
         console.print("[red]✗ VPN Connections: Error[/red]")
@@ -593,7 +663,9 @@ def _render_vpn_connections_section(console: Console, section_data: dict[str, An
     console.print(table)
 
 
-def _render_customer_gateways_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_customer_gateways_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render Customer Gateways section."""
     if not section_data.get("success"):
         console.print("[red]✗ Customer Gateways: Error[/red]")
@@ -628,7 +700,9 @@ def _render_customer_gateways_section(console: Console, section_data: dict[str, 
     console.print(table)
 
 
-def _render_vpn_gateways_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_vpn_gateways_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render VPN Gateways section."""
     if not section_data.get("success"):
         console.print("[red]✗ VPN Gateways: Error[/red]")
@@ -663,7 +737,9 @@ def _render_vpn_gateways_section(console: Console, section_data: dict[str, Any])
     console.print(table)
 
 
-def _render_dhcp_options_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_dhcp_options_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render DHCP Options section."""
     if not section_data.get("success"):
         console.print("[red]✗ DHCP Options: Error[/red]")
@@ -678,7 +754,9 @@ def _render_dhcp_options_section(console: Console, section_data: dict[str, Any])
         console.print("  [dim]No DHCP options configured[/dim]")
         return
 
-    console.print(f"\n[bold cyan]{dhcp_id}[/bold cyan] - {data.get('name', '<No Name>')}")
+    console.print(
+        f"\n[bold cyan]{dhcp_id}[/bold cyan] - {data.get('name', '<No Name>')}"
+    )
     configs = data.get("configurations", {})
     for key, values in configs.items():
         console.print(f"  {key}: {', '.join(values)}")
@@ -720,7 +798,9 @@ def _render_flow_logs_section(console: Console, section_data: dict[str, Any]) ->
     console.print(table)
 
 
-def _render_network_interfaces_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_network_interfaces_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render Network Interfaces section."""
     if not section_data.get("success"):
         console.print("[red]✗ Network Interfaces: Error[/red]")
@@ -730,7 +810,9 @@ def _render_network_interfaces_section(console: Console, section_data: dict[str,
     enis = data.get("network_interfaces", [])
 
     console.print(f"\n[bold]Network Interfaces ({data['total_count']})[/bold]")
-    console.print(f"  AWS-Managed: {data.get('aws_managed_count', 0)} | User-Managed: {data.get('user_managed_count', 0)}")
+    console.print(
+        f"  AWS-Managed: {data.get('aws_managed_count', 0)} | User-Managed: {data.get('user_managed_count', 0)}"
+    )
 
     if not enis:
         console.print("  [dim]No network interfaces found[/dim]")
@@ -740,11 +822,15 @@ def _render_network_interfaces_section(console: Console, section_data: dict[str,
     type_counts = data.get("interface_type_counts", {})
     if type_counts:
         console.print("\n[bold]By Interface Type:[/bold]")
-        for itype, count in sorted(type_counts.items(), key=lambda x: x[1], reverse=True)[:10]:
+        for itype, count in sorted(
+            type_counts.items(), key=lambda x: x[1], reverse=True
+        )[:10]:
             console.print(f"  {itype}: {count}")
 
     # Show detailed table (limit to 20 for console)
-    console.print(f"\n[bold]Interface Details (showing {min(20, len(enis))} of {len(enis)}):[/bold]")
+    console.print(
+        f"\n[bold]Interface Details (showing {min(20, len(enis))} of {len(enis)}):[/bold]"
+    )
     table = Table()
     table.add_column("ENI ID", style="cyan")
     table.add_column("Type", style="green")
@@ -768,7 +854,9 @@ def _render_network_interfaces_section(console: Console, section_data: dict[str,
         console.print(f"  [dim]... and {len(enis) - 20} more interfaces[/dim]")
 
 
-def _render_vpc_attributes_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_vpc_attributes_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render VPC Attributes section."""
     if not section_data.get("success"):
         console.print("[red]✗ VPC Attributes: Error[/red]")
@@ -779,11 +867,17 @@ def _render_vpc_attributes_section(console: Console, section_data: dict[str, Any
 
     console.print("\n[bold]VPC Attributes[/bold]")
     console.print(f"  DNS Support: {'✓' if attrs.get('enable_dns_support') else '✗'}")
-    console.print(f"  DNS Hostnames: {'✓' if attrs.get('enable_dns_hostnames') else '✗'}")
-    console.print(f"  Network Address Usage Metrics: {'✓' if attrs.get('enable_network_address_usage_metrics') else '✗'}")
+    console.print(
+        f"  DNS Hostnames: {'✓' if attrs.get('enable_dns_hostnames') else '✗'}"
+    )
+    console.print(
+        f"  Network Address Usage Metrics: {'✓' if attrs.get('enable_network_address_usage_metrics') else '✗'}"
+    )
 
 
-def _render_direct_connect_vifs_section(console: Console, section_data: dict[str, Any]) -> None:
+def _render_direct_connect_vifs_section(
+    console: Console, section_data: dict[str, Any]
+) -> None:
     """Render Direct Connect Virtual Interfaces section."""
     if not section_data.get("success"):
         console.print("[red]✗ Direct Connect VIFs: Error[/red]")
@@ -792,7 +886,9 @@ def _render_direct_connect_vifs_section(console: Console, section_data: dict[str
     data = section_data["data"]
     vifs = data.get("virtual_interfaces", [])
 
-    console.print(f"\n[bold]Direct Connect Virtual Interfaces ({data['total_count']})[/bold]")
+    console.print(
+        f"\n[bold]Direct Connect Virtual Interfaces ({data['total_count']})[/bold]"
+    )
 
     if not vifs:
         console.print("  [dim]No Direct Connect virtual interfaces found[/dim]")
@@ -806,7 +902,9 @@ def _render_direct_connect_vifs_section(console: Console, section_data: dict[str
     table.add_column("BGP Status", style="blue")
 
     for vif in vifs:
-        state_color = "green" if vif["virtual_interface_state"] == "available" else "yellow"
+        state_color = (
+            "green" if vif["virtual_interface_state"] == "available" else "yellow"
+        )
         bgp_status = f"{vif['bgp_sessions_up']}↑/{vif['bgp_sessions_down']}↓"
         bgp_color = "green" if vif.get("all_bgp_sessions_up") else "red"
         table.add_row(

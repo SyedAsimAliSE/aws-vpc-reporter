@@ -27,23 +27,27 @@ def dhcp_ops(mock_aws_client: AWSClient) -> DHCPOptionsOperations:
 class TestDHCPOptionsOperations:
     """Test DHCP Options operations class."""
 
-    def test_get_dhcp_options_success(self, dhcp_ops: DHCPOptionsOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_dhcp_options_success(
+        self, dhcp_ops: DHCPOptionsOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test successful DHCP options retrieval."""
         mock_aws_client.describe_dhcp_options.return_value = {
-            "DhcpOptions": [{
-                "DhcpOptionsId": "dopt-123",
-                "DhcpConfigurations": [
-                    {
-                        "Key": "domain-name",
-                        "Values": [{"Value": "example.com"}],
-                    },
-                    {
-                        "Key": "domain-name-servers",
-                        "Values": [{"Value": "10.0.0.2"}],
-                    },
-                ],
-                "Tags": [{"Key": "Name", "Value": "Custom DHCP"}],
-            }]
+            "DhcpOptions": [
+                {
+                    "DhcpOptionsId": "dopt-123",
+                    "DhcpConfigurations": [
+                        {
+                            "Key": "domain-name",
+                            "Values": [{"Value": "example.com"}],
+                        },
+                        {
+                            "Key": "domain-name-servers",
+                            "Values": [{"Value": "10.0.0.2"}],
+                        },
+                    ],
+                    "Tags": [{"Key": "Name", "Value": "Custom DHCP"}],
+                }
+            ]
         }
 
         result = dhcp_ops.get_dhcp_options("dopt-123")
@@ -53,7 +57,9 @@ class TestDHCPOptionsOperations:
         assert "domain-name" in result["configurations"]
         assert result["configurations"]["domain-name"] == ["example.com"]
 
-    def test_get_dhcp_options_not_found(self, dhcp_ops: DHCPOptionsOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_dhcp_options_not_found(
+        self, dhcp_ops: DHCPOptionsOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test DHCP options not found."""
         mock_aws_client.describe_dhcp_options.return_value = {"DhcpOptions": []}
 
@@ -63,7 +69,9 @@ class TestDHCPOptionsOperations:
         assert result["dhcp_options_id"] == "dopt-nonexistent"
         assert result["configurations"] == {}
 
-    def test_get_dhcp_options_empty_id(self, dhcp_ops: DHCPOptionsOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_dhcp_options_empty_id(
+        self, dhcp_ops: DHCPOptionsOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test with empty DHCP options ID."""
         result = dhcp_ops.get_dhcp_options("")
 

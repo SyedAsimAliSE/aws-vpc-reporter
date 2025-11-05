@@ -34,15 +34,17 @@ def execute_report(
     if not vpc_id:
         vpc_id = _select_vpc_interactive(console, profile, region)
 
-    console.print(Panel(
-        f"[bold cyan]Profile:[/] {profile}\n"
-        f"[bold cyan]Region:[/] {region}\n"
-        f"[bold cyan]VPC ID:[/] {vpc_id}\n"
-        f"[bold cyan]Format:[/] {format}\n"
-        f"[bold cyan]Async:[/] {'Yes' if use_async else 'No'}",
-        title="[bold]Report Configuration[/bold]",
-        border_style="green"
-    ))
+    console.print(
+        Panel(
+            f"[bold cyan]Profile:[/] {profile}\n"
+            f"[bold cyan]Region:[/] {region}\n"
+            f"[bold cyan]VPC ID:[/] {vpc_id}\n"
+            f"[bold cyan]Format:[/] {format}\n"
+            f"[bold cyan]Async:[/] {'Yes' if use_async else 'No'}",
+            title="[bold]Report Configuration[/bold]",
+            border_style="green",
+        )
+    )
 
     # Initialize AWS client
     aws_client = AWSClient(profile=profile, region=region, use_cache=not no_cache)
@@ -64,13 +66,17 @@ def execute_report(
             import asyncio
 
             from vpc_reporter.operations.async_collector import collect_all_data_async
-            data = asyncio.run(collect_all_data_async(
-                aws_client=aws_client,
-                vpc_id=vpc_id,
-                sections=selected_sections,
-            ))
+
+            data = asyncio.run(
+                collect_all_data_async(
+                    aws_client=aws_client,
+                    vpc_id=vpc_id,
+                    sections=selected_sections,
+                )
+            )
         else:
             from vpc_reporter.operations.sync_collector import collect_all_data_sync
+
             data = collect_all_data_sync(
                 aws_client=aws_client,
                 vpc_id=vpc_id,
@@ -83,9 +89,11 @@ def execute_report(
     # Generate output
     if format == "console":
         from vpc_reporter.output.console import render_console_output
+
         render_console_output(console, data)
     elif format == "markdown":
         from vpc_reporter.output.markdown import generate_markdown
+
         content = generate_markdown(data)
         if output:
             Path(output).write_text(content)
@@ -97,6 +105,7 @@ def execute_report(
             console.print(f"[green]✓[/green] Report saved to: {output_path}")
     elif format == "json":
         from vpc_reporter.output.json_output import generate_json
+
         content = generate_json(data)
         if output:
             Path(output).write_text(content)
@@ -108,6 +117,7 @@ def execute_report(
             console.print(f"[green]✓[/green] Report saved to: {output_path}")
     elif format == "yaml":
         from vpc_reporter.output.yaml_output import generate_yaml
+
         content = generate_yaml(data)
         if output:
             Path(output).write_text(content)

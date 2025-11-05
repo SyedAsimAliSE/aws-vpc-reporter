@@ -42,31 +42,41 @@ class NetworkACLOperations:
             # Get associated subnets
             associations = []
             for assoc in nacl.get("Associations", []):
-                associations.append({
-                    "network_acl_association_id": assoc.get("NetworkAclAssociationId"),
-                    "subnet_id": assoc.get("SubnetId"),
-                })
+                associations.append(
+                    {
+                        "network_acl_association_id": assoc.get(
+                            "NetworkAclAssociationId"
+                        ),
+                        "subnet_id": assoc.get("SubnetId"),
+                    }
+                )
 
             # Parse rules with full details
             entries = nacl.get("Entries", [])
-            inbound_rules = self._parse_rules([e for e in entries if not e.get("Egress", False)])
-            outbound_rules = self._parse_rules([e for e in entries if e.get("Egress", False)])
+            inbound_rules = self._parse_rules(
+                [e for e in entries if not e.get("Egress", False)]
+            )
+            outbound_rules = self._parse_rules(
+                [e for e in entries if e.get("Egress", False)]
+            )
 
-            processed_acls.append({
-                "network_acl_id": nacl["NetworkAclId"],
-                "vpc_id": nacl.get("VpcId"),
-                "owner_id": nacl.get("OwnerId"),
-                "is_default": nacl.get("IsDefault", False),
-                "associations": associations,
-                "associated_subnet_count": len(associations),
-                "inbound_rules_count": len(inbound_rules),
-                "outbound_rules_count": len(outbound_rules),
-                "inbound_rules": inbound_rules,
-                "outbound_rules": outbound_rules,
-                "entries_raw": entries,
-                "tags": nacl.get("Tags", []),
-                "name": self._get_tag_value(nacl.get("Tags", []), "Name"),
-            })
+            processed_acls.append(
+                {
+                    "network_acl_id": nacl["NetworkAclId"],
+                    "vpc_id": nacl.get("VpcId"),
+                    "owner_id": nacl.get("OwnerId"),
+                    "is_default": nacl.get("IsDefault", False),
+                    "associations": associations,
+                    "associated_subnet_count": len(associations),
+                    "inbound_rules_count": len(inbound_rules),
+                    "outbound_rules_count": len(outbound_rules),
+                    "inbound_rules": inbound_rules,
+                    "outbound_rules": outbound_rules,
+                    "entries_raw": entries,
+                    "tags": nacl.get("Tags", []),
+                    "name": self._get_tag_value(nacl.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_acls)} network ACLs")
 
@@ -114,15 +124,17 @@ class NetworkACLOperations:
                 if icmp_type != "" or icmp_code != "":
                     icmp_info = f"Type: {icmp_type}, Code: {icmp_code}"
 
-            parsed_rules.append({
-                "rule_number": rule_number,
-                "protocol": self._get_protocol_name(protocol),
-                "protocol_number": protocol,
-                "rule_action": rule_action,
-                "cidr_block": cidr_block,
-                "port_range": port_range,
-                "icmp_info": icmp_info,
-            })
+            parsed_rules.append(
+                {
+                    "rule_number": rule_number,
+                    "protocol": self._get_protocol_name(protocol),
+                    "protocol_number": protocol,
+                    "rule_action": rule_action,
+                    "cidr_block": cidr_block,
+                    "port_range": port_range,
+                    "icmp_info": icmp_info,
+                }
+            )
 
         # Sort by rule number
         parsed_rules.sort(key=lambda x: x["rule_number"])

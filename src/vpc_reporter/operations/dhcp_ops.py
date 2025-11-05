@@ -38,9 +38,7 @@ class DHCPOptionsOperations:
                 "raw_data": None,
             }
 
-        response = self.client.describe_dhcp_options(
-            DhcpOptionsIds=[dhcp_options_id]
-        )
+        response = self.client.describe_dhcp_options(DhcpOptionsIds=[dhcp_options_id])
 
         dhcp_options_list = response.get("DhcpOptions", [])
 

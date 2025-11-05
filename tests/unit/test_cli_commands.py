@@ -66,7 +66,7 @@ class TestCLICommands:
         """Test config init command."""
         runner = CliRunner()
 
-        with patch('vpc_reporter.config.config.create_default_config') as mock_create:
+        with patch("vpc_reporter.config.config.create_default_config") as mock_create:
             result = runner.invoke(cli, ["config", "--init"])
 
             assert result.exit_code == 0
@@ -76,7 +76,7 @@ class TestCLICommands:
         """Test config show command."""
         runner = CliRunner()
 
-        with patch('vpc_reporter.config.config.ConfigManager') as mock_config:
+        with patch("vpc_reporter.config.config.ConfigManager") as mock_config:
             mock_instance = MagicMock()
             mock_instance.get_aws_profile.return_value = "test-profile"
             mock_instance.get_default_region.return_value = "us-east-1"
@@ -99,7 +99,9 @@ class TestCLICommands:
         runner = CliRunner()
 
         # Test that global options don't cause errors
-        result = runner.invoke(cli, ["--profile", "test", "--region", "us-west-2", "--help"])
+        result = runner.invoke(
+            cli, ["--profile", "test", "--region", "us-west-2", "--help"]
+        )
 
         assert result.exit_code == 0
 
@@ -108,9 +110,11 @@ class TestCLICommands:
         runner = CliRunner()
 
         # Should prompt for VPC selection
-        with patch('vpc_reporter.cli.report_command.execute_report'):
+        with patch("vpc_reporter.cli.report_command.execute_report"):
             # Simulate user canceling the prompt
-            result = runner.invoke(cli, ["--profile", "test", "--region", "us-east-1", "report"])
+            result = runner.invoke(
+                cli, ["--profile", "test", "--region", "us-east-1", "report"]
+            )
 
             # Command should handle missing VPC ID gracefully
             assert result.exit_code in [0, 1]  # Either success or handled error

@@ -14,7 +14,9 @@ class AWSConfig(BaseModel):
 
     profile: str = Field(default="default", description="AWS profile name")
     default_region: str = Field(default="us-east-1", description="Default AWS region")
-    regions: list[str] = Field(default_factory=lambda: ["us-east-1"], description="Available regions")
+    regions: list[str] = Field(
+        default_factory=lambda: ["us-east-1"], description="Available regions"
+    )
 
 
 class OutputConfig(BaseModel):
@@ -29,7 +31,9 @@ class CacheConfig(BaseModel):
 
     enabled: bool = Field(default=True, description="Enable caching")
     ttl: int = Field(default=300, description="Cache TTL in seconds")
-    directory: str = Field(default="./.vpc-reporter-cache", description="Cache directory")
+    directory: str = Field(
+        default="./.vpc-reporter-cache", description="Cache directory"
+    )
 
 
 class VPCReporterConfig(BaseModel):

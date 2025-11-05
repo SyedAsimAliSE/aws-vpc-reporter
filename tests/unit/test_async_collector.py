@@ -29,6 +29,7 @@ class TestAsyncCollector:
     @pytest.mark.asyncio
     async def test_run_in_executor(self) -> None:
         """Test running function in executor."""
+
         def sync_func(x: int, y: int) -> int:
             return x + y
 
@@ -59,7 +60,9 @@ class TestAsyncCollector:
     async def test_collect_all_data_async(self, mock_aws_client: AWSClient) -> None:
         """Test collecting all data asynchronously."""
         # Mock all operations
-        with patch('vpc_reporter.operations.async_collector.VPCOperations') as mock_vpc_ops:
+        with patch(
+            "vpc_reporter.operations.async_collector.VPCOperations"
+        ) as mock_vpc_ops:
             mock_vpc_instance = MagicMock()
             mock_vpc_instance.get_vpc_details.return_value = {
                 "vpc_id": "vpc-123",
@@ -68,7 +71,9 @@ class TestAsyncCollector:
             }
             mock_vpc_ops.return_value = mock_vpc_instance
 
-            with patch('vpc_reporter.operations.async_collector.SubnetOperations') as mock_subnet_ops:
+            with patch(
+                "vpc_reporter.operations.async_collector.SubnetOperations"
+            ) as mock_subnet_ops:
                 mock_subnet_instance = MagicMock()
                 mock_subnet_instance.get_subnets.return_value = {
                     "total_count": 1,
@@ -77,27 +82,64 @@ class TestAsyncCollector:
                 mock_subnet_ops.return_value = mock_subnet_instance
 
                 # Mock all other operations to return empty data
-                with patch('vpc_reporter.operations.async_collector.RouteTableOperations'):
-                    with patch('vpc_reporter.operations.async_collector.SecurityGroupOperations'):
-                        with patch('vpc_reporter.operations.async_collector.NetworkACLOperations'):
-                            with patch('vpc_reporter.operations.async_collector.InternetGatewayOperations'):
-                                with patch('vpc_reporter.operations.async_collector.NATGatewayOperations'):
-                                    with patch('vpc_reporter.operations.async_collector.ElasticIPOperations'):
-                                        with patch('vpc_reporter.operations.async_collector.VPCEndpointOperations'):
-                                            with patch('vpc_reporter.operations.async_collector.VPCPeeringOperations'):
-                                                with patch('vpc_reporter.operations.async_collector.TransitGatewayAttachmentOperations'):
-                                                    with patch('vpc_reporter.operations.async_collector.CustomerGatewayOperations'):
-                                                        with patch('vpc_reporter.operations.async_collector.VirtualPrivateGatewayOperations'):
-                                                            with patch('vpc_reporter.operations.async_collector.DHCPOptionsOperations'):
-                                                                with patch('vpc_reporter.operations.async_collector.FlowLogsOperations'):
-                                                                    with patch('vpc_reporter.operations.async_collector.VPNConnectionOperations'):
-                                                                        with patch('vpc_reporter.operations.async_collector.NetworkInterfaceOperations'):
-                                                                            with patch('vpc_reporter.operations.async_collector.VPCAttributesOperations'):
-                                                                                with patch('vpc_reporter.operations.async_collector.DirectConnectVIFOperations'):
+                with patch(
+                    "vpc_reporter.operations.async_collector.RouteTableOperations"
+                ):
+                    with patch(
+                        "vpc_reporter.operations.async_collector.SecurityGroupOperations"
+                    ):
+                        with patch(
+                            "vpc_reporter.operations.async_collector.NetworkACLOperations"
+                        ):
+                            with patch(
+                                "vpc_reporter.operations.async_collector.InternetGatewayOperations"
+                            ):
+                                with patch(
+                                    "vpc_reporter.operations.async_collector.NATGatewayOperations"
+                                ):
+                                    with patch(
+                                        "vpc_reporter.operations.async_collector.ElasticIPOperations"
+                                    ):
+                                        with patch(
+                                            "vpc_reporter.operations.async_collector.VPCEndpointOperations"
+                                        ):
+                                            with patch(
+                                                "vpc_reporter.operations.async_collector.VPCPeeringOperations"
+                                            ):
+                                                with patch(
+                                                    "vpc_reporter.operations.async_collector.TransitGatewayAttachmentOperations"
+                                                ):
+                                                    with patch(
+                                                        "vpc_reporter.operations.async_collector.CustomerGatewayOperations"
+                                                    ):
+                                                        with patch(
+                                                            "vpc_reporter.operations.async_collector.VirtualPrivateGatewayOperations"
+                                                        ):
+                                                            with patch(
+                                                                "vpc_reporter.operations.async_collector.DHCPOptionsOperations"
+                                                            ):
+                                                                with patch(
+                                                                    "vpc_reporter.operations.async_collector.FlowLogsOperations"
+                                                                ):
+                                                                    with patch(
+                                                                        "vpc_reporter.operations.async_collector.VPNConnectionOperations"
+                                                                    ):
+                                                                        with patch(
+                                                                            "vpc_reporter.operations.async_collector.NetworkInterfaceOperations"
+                                                                        ):
+                                                                            with patch(
+                                                                                "vpc_reporter.operations.async_collector.VPCAttributesOperations"
+                                                                            ):
+                                                                                with patch(
+                                                                                    "vpc_reporter.operations.async_collector.DirectConnectVIFOperations"
+                                                                                ):
                                                                                     result = await collect_all_data_async(
                                                                                         mock_aws_client,
                                                                                         "vpc-123",
-                                                                                        sections=["vpc", "subnets"],
+                                                                                        sections=[
+                                                                                            "vpc",
+                                                                                            "subnets",
+                                                                                        ],
                                                                                     )
 
         assert result["vpc_id"] == "vpc-123"
@@ -109,6 +151,7 @@ class TestAsyncCollector:
     @pytest.mark.asyncio
     async def test_collect_section_async_handles_exception(self) -> None:
         """Test that section collection handles exceptions gracefully."""
+
         def failing_collector() -> None:
             raise ValueError("Test error")
 

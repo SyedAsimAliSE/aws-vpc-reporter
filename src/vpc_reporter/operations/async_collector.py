@@ -88,7 +88,9 @@ async def collect_all_data_async(
         "elastic_ips": lambda: eip_ops.get_elastic_ips(vpc_id),
         "vpc_endpoints": lambda: vpc_endpoint_ops.get_vpc_endpoints(vpc_id),
         "vpc_peering": lambda: peering_ops.get_vpc_peering_connections(vpc_id),
-        "transit_gateway_attachments": lambda: tgw_ops.get_transit_gateway_attachments(vpc_id),
+        "transit_gateway_attachments": lambda: tgw_ops.get_transit_gateway_attachments(
+            vpc_id
+        ),
         "vpn_connections": lambda: vpn_ops.get_vpn_connections(),
         "customer_gateways": lambda: cgw_ops.get_customer_gateways(),
         "vpn_gateways": lambda: vgw_ops.get_vpn_gateways(vpc_id),

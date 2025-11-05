@@ -41,8 +41,7 @@ class RouteTableOperations:
         for rt in route_tables:
             # Check if main route table
             is_main = any(
-                assoc.get("Main", False)
-                for assoc in rt.get("Associations", [])
+                assoc.get("Main", False) for assoc in rt.get("Associations", [])
             )
 
             # Get associated subnets
@@ -90,48 +89,57 @@ class RouteTableOperations:
                     target_type = "Core Network"
                     target_value = route.get("CoreNetworkArn")
 
-                routes.append({
-                    "destination": (
-                        route.get("DestinationCidrBlock") or
-                        route.get("DestinationIpv6CidrBlock") or
-                        route.get("DestinationPrefixListId") or
-                        "N/A"
-                    ),
-                    "target": target_value,
-                    "target_type": target_type,
-                    "state": route.get("State", "unknown"),
-                    "origin": route.get("Origin", "unknown"),
-                })
+                routes.append(
+                    {
+                        "destination": (
+                            route.get("DestinationCidrBlock")
+                            or route.get("DestinationIpv6CidrBlock")
+                            or route.get("DestinationPrefixListId")
+                            or "N/A"
+                        ),
+                        "target": target_value,
+                        "target_type": target_type,
+                        "state": route.get("State", "unknown"),
+                        "origin": route.get("Origin", "unknown"),
+                    }
+                )
 
             # Get propagating VGWs
             propagating_vgws = [
-                vgw.get("GatewayId")
-                for vgw in rt.get("PropagatingVgws", [])
+                vgw.get("GatewayId") for vgw in rt.get("PropagatingVgws", [])
             ]
 
             # Parse associations with full details
             associations_detail = []
             for assoc in rt.get("Associations", []):
-                associations_detail.append({
-                    "route_table_association_id": assoc.get("RouteTableAssociationId"),
-                    "subnet_id": assoc.get("SubnetId"),
-                    "gateway_id": assoc.get("GatewayId"),
-                    "main": assoc.get("Main", False),
-                    "association_state": assoc.get("AssociationState", {}).get("State"),
-                })
+                associations_detail.append(
+                    {
+                        "route_table_association_id": assoc.get(
+                            "RouteTableAssociationId"
+                        ),
+                        "subnet_id": assoc.get("SubnetId"),
+                        "gateway_id": assoc.get("GatewayId"),
+                        "main": assoc.get("Main", False),
+                        "association_state": assoc.get("AssociationState", {}).get(
+                            "State"
+                        ),
+                    }
+                )
 
-            processed_tables.append({
-                "route_table_id": rt["RouteTableId"],
-                "vpc_id": rt.get("VpcId"),
-                "owner_id": rt.get("OwnerId"),
-                "is_main": is_main,
-                "associated_subnets": associated_subnets,
-                "associations": associations_detail,
-                "routes": routes,
-                "propagating_vgws": propagating_vgws,
-                "name": self._get_tag_value(rt.get("Tags", []), "Name"),
-                "tags": rt.get("Tags", []),
-            })
+            processed_tables.append(
+                {
+                    "route_table_id": rt["RouteTableId"],
+                    "vpc_id": rt.get("VpcId"),
+                    "owner_id": rt.get("OwnerId"),
+                    "is_main": is_main,
+                    "associated_subnets": associated_subnets,
+                    "associations": associations_detail,
+                    "routes": routes,
+                    "propagating_vgws": propagating_vgws,
+                    "name": self._get_tag_value(rt.get("Tags", []), "Name"),
+                    "tags": rt.get("Tags", []),
+                }
+            )
 
         logger.info(f"Found {len(processed_tables)} route tables")
 

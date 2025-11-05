@@ -42,27 +42,31 @@ class FlowLogsOperations:
             # Parse destination options
             dest_options = log.get("DestinationOptions", {})
 
-            processed_logs.append({
-                "flow_log_id": log["FlowLogId"],
-                "flow_log_status": log.get("FlowLogStatus"),
-                "resource_id": log.get("ResourceId"),
-                "traffic_type": log.get("TrafficType"),
-                "log_destination_type": log.get("LogDestinationType"),
-                "log_destination": log.get("LogDestination"),
-                "log_format": log.get("LogFormat"),
-                "log_group_name": log.get("LogGroupName"),
-                "deliver_logs_status": log.get("DeliverLogsStatus"),
-                "deliver_logs_error_message": log.get("DeliverLogsErrorMessage"),
-                "deliver_logs_permission_arn": log.get("DeliverLogsPermissionArn"),
-                "max_aggregation_interval": log.get("MaxAggregationInterval"),
-                "creation_time": log.get("CreationTime"),
-                # Destination options
-                "file_format": dest_options.get("FileFormat"),
-                "hive_compatible_partitions": dest_options.get("HiveCompatiblePartitions", False),
-                "per_hour_partition": dest_options.get("PerHourPartition", False),
-                "tags": log.get("Tags", []),
-                "name": self._get_tag_value(log.get("Tags", []), "Name"),
-            })
+            processed_logs.append(
+                {
+                    "flow_log_id": log["FlowLogId"],
+                    "flow_log_status": log.get("FlowLogStatus"),
+                    "resource_id": log.get("ResourceId"),
+                    "traffic_type": log.get("TrafficType"),
+                    "log_destination_type": log.get("LogDestinationType"),
+                    "log_destination": log.get("LogDestination"),
+                    "log_format": log.get("LogFormat"),
+                    "log_group_name": log.get("LogGroupName"),
+                    "deliver_logs_status": log.get("DeliverLogsStatus"),
+                    "deliver_logs_error_message": log.get("DeliverLogsErrorMessage"),
+                    "deliver_logs_permission_arn": log.get("DeliverLogsPermissionArn"),
+                    "max_aggregation_interval": log.get("MaxAggregationInterval"),
+                    "creation_time": log.get("CreationTime"),
+                    # Destination options
+                    "file_format": dest_options.get("FileFormat"),
+                    "hive_compatible_partitions": dest_options.get(
+                        "HiveCompatiblePartitions", False
+                    ),
+                    "per_hour_partition": dest_options.get("PerHourPartition", False),
+                    "tags": log.get("Tags", []),
+                    "name": self._get_tag_value(log.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_logs)} flow logs")
 

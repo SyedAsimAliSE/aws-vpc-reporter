@@ -27,18 +27,22 @@ def eip_ops(mock_aws_client: AWSClient) -> ElasticIPOperations:
 class TestElasticIPOperations:
     """Test Elastic IP operations class."""
 
-    def test_get_elastic_ips_success(self, eip_ops: ElasticIPOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_elastic_ips_success(
+        self, eip_ops: ElasticIPOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test successful Elastic IP retrieval."""
         mock_aws_client.describe_addresses.return_value = {
-            "Addresses": [{
-                "AllocationId": "eipalloc-123",
-                "PublicIp": "54.123.45.67",
-                "Domain": "vpc",
-                "NetworkInterfaceId": "eni-123",
-                "PrivateIpAddress": "10.0.1.5",
-                "AssociationId": "eipassoc-123",
-                "Tags": [{"Key": "Name", "Value": "NAT EIP"}],
-            }]
+            "Addresses": [
+                {
+                    "AllocationId": "eipalloc-123",
+                    "PublicIp": "54.123.45.67",
+                    "Domain": "vpc",
+                    "NetworkInterfaceId": "eni-123",
+                    "PrivateIpAddress": "10.0.1.5",
+                    "AssociationId": "eipassoc-123",
+                    "Tags": [{"Key": "Name", "Value": "NAT EIP"}],
+                }
+            ]
         }
 
         result = eip_ops.get_elastic_ips("vpc-123")
@@ -49,7 +53,9 @@ class TestElasticIPOperations:
         assert result["elastic_ips"][0]["public_ip"] == "54.123.45.67"
         assert result["elastic_ips"][0]["name"] == "NAT EIP"
 
-    def test_get_elastic_ips_empty(self, eip_ops: ElasticIPOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_elastic_ips_empty(
+        self, eip_ops: ElasticIPOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test VPC with no Elastic IPs."""
         mock_aws_client.describe_addresses.return_value = {"Addresses": []}
 
@@ -58,14 +64,18 @@ class TestElasticIPOperations:
         assert result["total_count"] == 0
         assert result["elastic_ips"] == []
 
-    def test_get_elastic_ips_unassociated(self, eip_ops: ElasticIPOperations, mock_aws_client: AWSClient) -> None:
+    def test_get_elastic_ips_unassociated(
+        self, eip_ops: ElasticIPOperations, mock_aws_client: AWSClient
+    ) -> None:
         """Test unassociated Elastic IP."""
         mock_aws_client.describe_addresses.return_value = {
-            "Addresses": [{
-                "AllocationId": "eipalloc-unassoc",
-                "PublicIp": "54.123.45.68",
-                "Domain": "vpc",
-            }]
+            "Addresses": [
+                {
+                    "AllocationId": "eipalloc-unassoc",
+                    "PublicIp": "54.123.45.68",
+                    "Domain": "vpc",
+                }
+            ]
         }
 
         result = eip_ops.get_elastic_ips("vpc-123")

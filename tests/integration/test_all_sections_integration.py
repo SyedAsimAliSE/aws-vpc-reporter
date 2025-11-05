@@ -26,15 +26,17 @@ def mock_aws_client() -> AWSClient:
 
     # Mock all AWS API responses
     client.describe_vpcs.return_value = {
-        "Vpcs": [{
-            "VpcId": "vpc-test123",
-            "CidrBlock": "10.0.0.0/16",
-            "State": "available",
-            "Tags": [{"Key": "Name", "Value": "Test VPC"}],
-            "InstanceTenancy": "default",
-            "IsDefault": False,
-            "DhcpOptionsId": "dopt-test123",
-        }]
+        "Vpcs": [
+            {
+                "VpcId": "vpc-test123",
+                "CidrBlock": "10.0.0.0/16",
+                "State": "available",
+                "Tags": [{"Key": "Name", "Value": "Test VPC"}],
+                "InstanceTenancy": "default",
+                "IsDefault": False,
+                "DhcpOptionsId": "dopt-test123",
+            }
+        ]
     }
 
     client.describe_vpc_attribute.return_value = {
@@ -43,283 +45,338 @@ def mock_aws_client() -> AWSClient:
     }
 
     client.describe_subnets.return_value = {
-        "Subnets": [{
-            "SubnetId": "subnet-test123",
-            "VpcId": "vpc-test123",
-            "CidrBlock": "10.0.1.0/24",
-            "AvailabilityZone": "us-east-1a",
-            "AvailableIpAddressCount": 251,
-            "State": "available",
-            "MapPublicIpOnLaunch": True,
-            "Tags": [{"Key": "Name", "Value": "Test Subnet"}],
-        }]
+        "Subnets": [
+            {
+                "SubnetId": "subnet-test123",
+                "VpcId": "vpc-test123",
+                "CidrBlock": "10.0.1.0/24",
+                "AvailabilityZone": "us-east-1a",
+                "AvailableIpAddressCount": 251,
+                "State": "available",
+                "MapPublicIpOnLaunch": True,
+                "Tags": [{"Key": "Name", "Value": "Test Subnet"}],
+            }
+        ]
     }
 
     client.describe_route_tables.return_value = {
-        "RouteTables": [{
-            "RouteTableId": "rtb-test123",
-            "VpcId": "vpc-test123",
-            "Routes": [
-                {
-                    "DestinationCidrBlock": "10.0.0.0/16",
-                    "GatewayId": "local",
-                    "State": "active",
-                },
-                {
-                    "DestinationCidrBlock": "0.0.0.0/0",
-                    "GatewayId": "igw-test123",
-                    "State": "active",
-                }
-            ],
-            "Associations": [{
-                "RouteTableAssociationId": "rtbassoc-test123",
-                "SubnetId": "subnet-test123",
-                "Main": False,
-            }],
-            "Tags": [{"Key": "Name", "Value": "Test Route Table"}],
-        }]
+        "RouteTables": [
+            {
+                "RouteTableId": "rtb-test123",
+                "VpcId": "vpc-test123",
+                "Routes": [
+                    {
+                        "DestinationCidrBlock": "10.0.0.0/16",
+                        "GatewayId": "local",
+                        "State": "active",
+                    },
+                    {
+                        "DestinationCidrBlock": "0.0.0.0/0",
+                        "GatewayId": "igw-test123",
+                        "State": "active",
+                    },
+                ],
+                "Associations": [
+                    {
+                        "RouteTableAssociationId": "rtbassoc-test123",
+                        "SubnetId": "subnet-test123",
+                        "Main": False,
+                    }
+                ],
+                "Tags": [{"Key": "Name", "Value": "Test Route Table"}],
+            }
+        ]
     }
 
     client.describe_security_groups.return_value = {
-        "SecurityGroups": [{
-            "GroupId": "sg-test123",
-            "GroupName": "test-sg",
-            "Description": "Test security group",
-            "VpcId": "vpc-test123",
-            "IpPermissions": [{
-                "IpProtocol": "tcp",
-                "FromPort": 443,
-                "ToPort": 443,
-                "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
-            }],
-            "IpPermissionsEgress": [{
-                "IpProtocol": "-1",
-                "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
-            }],
-            "Tags": [{"Key": "Name", "Value": "Test SG"}],
-        }]
+        "SecurityGroups": [
+            {
+                "GroupId": "sg-test123",
+                "GroupName": "test-sg",
+                "Description": "Test security group",
+                "VpcId": "vpc-test123",
+                "IpPermissions": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": 443,
+                        "ToPort": 443,
+                        "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
+                    }
+                ],
+                "Tags": [{"Key": "Name", "Value": "Test SG"}],
+            }
+        ]
     }
 
     client.describe_network_acls.return_value = {
-        "NetworkAcls": [{
-            "NetworkAclId": "acl-test123",
-            "VpcId": "vpc-test123",
-            "IsDefault": True,
-            "Entries": [
-                {
-                    "RuleNumber": 100,
-                    "Protocol": "-1",
-                    "RuleAction": "allow",
-                    "Egress": False,
-                    "CidrBlock": "0.0.0.0/0",
-                },
-                {
-                    "RuleNumber": 100,
-                    "Protocol": "-1",
-                    "RuleAction": "allow",
-                    "Egress": True,
-                    "CidrBlock": "0.0.0.0/0",
-                }
-            ],
-            "Associations": [{
-                "NetworkAclAssociationId": "aclassoc-test123",
-                "SubnetId": "subnet-test123",
-            }],
-            "Tags": [{"Key": "Name", "Value": "Test NACL"}],
-        }]
+        "NetworkAcls": [
+            {
+                "NetworkAclId": "acl-test123",
+                "VpcId": "vpc-test123",
+                "IsDefault": True,
+                "Entries": [
+                    {
+                        "RuleNumber": 100,
+                        "Protocol": "-1",
+                        "RuleAction": "allow",
+                        "Egress": False,
+                        "CidrBlock": "0.0.0.0/0",
+                    },
+                    {
+                        "RuleNumber": 100,
+                        "Protocol": "-1",
+                        "RuleAction": "allow",
+                        "Egress": True,
+                        "CidrBlock": "0.0.0.0/0",
+                    },
+                ],
+                "Associations": [
+                    {
+                        "NetworkAclAssociationId": "aclassoc-test123",
+                        "SubnetId": "subnet-test123",
+                    }
+                ],
+                "Tags": [{"Key": "Name", "Value": "Test NACL"}],
+            }
+        ]
     }
 
     client.describe_internet_gateways.return_value = {
-        "InternetGateways": [{
-            "InternetGatewayId": "igw-test123",
-            "Attachments": [{
-                "VpcId": "vpc-test123",
-                "State": "available",
-            }],
-            "Tags": [{"Key": "Name", "Value": "Test IGW"}],
-        }]
+        "InternetGateways": [
+            {
+                "InternetGatewayId": "igw-test123",
+                "Attachments": [
+                    {
+                        "VpcId": "vpc-test123",
+                        "State": "available",
+                    }
+                ],
+                "Tags": [{"Key": "Name", "Value": "Test IGW"}],
+            }
+        ]
     }
 
     client.describe_nat_gateways.return_value = {
-        "NatGateways": [{
-            "NatGatewayId": "nat-test123",
-            "SubnetId": "subnet-test123",
-            "VpcId": "vpc-test123",
-            "State": "available",
-            "NatGatewayAddresses": [{
-                "PublicIp": "54.1.2.3",
-                "PrivateIp": "10.0.1.5",
-            }],
-            "Tags": [{"Key": "Name", "Value": "Test NAT"}],
-        }]
+        "NatGateways": [
+            {
+                "NatGatewayId": "nat-test123",
+                "SubnetId": "subnet-test123",
+                "VpcId": "vpc-test123",
+                "State": "available",
+                "NatGatewayAddresses": [
+                    {
+                        "PublicIp": "54.1.2.3",
+                        "PrivateIp": "10.0.1.5",
+                    }
+                ],
+                "Tags": [{"Key": "Name", "Value": "Test NAT"}],
+            }
+        ]
     }
 
     client.describe_addresses.return_value = {
-        "Addresses": [{
-            "PublicIp": "54.1.2.3",
-            "AllocationId": "eipalloc-test123",
-            "Domain": "vpc",
-            "NetworkInterfaceId": "eni-test123",
-            "AssociationId": "eipassoc-test123",
-            "Tags": [{"Key": "Name", "Value": "Test EIP"}],
-        }]
+        "Addresses": [
+            {
+                "PublicIp": "54.1.2.3",
+                "AllocationId": "eipalloc-test123",
+                "Domain": "vpc",
+                "NetworkInterfaceId": "eni-test123",
+                "AssociationId": "eipassoc-test123",
+                "Tags": [{"Key": "Name", "Value": "Test EIP"}],
+            }
+        ]
     }
 
     client.describe_vpc_endpoints.return_value = {
-        "VpcEndpoints": [{
-            "VpcEndpointId": "vpce-test123",
-            "VpcId": "vpc-test123",
-            "ServiceName": "com.amazonaws.us-east-1.s3",
-            "VpcEndpointType": "Gateway",
-            "State": "available",
-            "RouteTableIds": ["rtb-test123"],
-            "Tags": [{"Key": "Name", "Value": "Test Endpoint"}],
-        }]
+        "VpcEndpoints": [
+            {
+                "VpcEndpointId": "vpce-test123",
+                "VpcId": "vpc-test123",
+                "ServiceName": "com.amazonaws.us-east-1.s3",
+                "VpcEndpointType": "Gateway",
+                "State": "available",
+                "RouteTableIds": ["rtb-test123"],
+                "Tags": [{"Key": "Name", "Value": "Test Endpoint"}],
+            }
+        ]
     }
 
     client.describe_vpc_peering_connections.return_value = {
-        "VpcPeeringConnections": [{
-            "VpcPeeringConnectionId": "pcx-test123",
-            "RequesterVpcInfo": {"VpcId": "vpc-test123"},
-            "AccepterVpcInfo": {"VpcId": "vpc-test456"},
-            "Status": {"Code": "active"},
-            "Tags": [{"Key": "Name", "Value": "Test Peering"}],
-        }]
+        "VpcPeeringConnections": [
+            {
+                "VpcPeeringConnectionId": "pcx-test123",
+                "RequesterVpcInfo": {"VpcId": "vpc-test123"},
+                "AccepterVpcInfo": {"VpcId": "vpc-test456"},
+                "Status": {"Code": "active"},
+                "Tags": [{"Key": "Name", "Value": "Test Peering"}],
+            }
+        ]
     }
 
     client.describe_transit_gateway_vpc_attachments.return_value = {
-        "TransitGatewayVpcAttachments": [{
-            "TransitGatewayAttachmentId": "tgw-attach-test123",
-            "TransitGatewayId": "tgw-test123",
-            "VpcId": "vpc-test123",
-            "State": "available",
-            "Options": {
-                "DnsSupport": "enable",
-                "Ipv6Support": "disable",
-            },
-            "Tags": [{"Key": "Name", "Value": "Test TGW Attachment"}],
-        }]
+        "TransitGatewayVpcAttachments": [
+            {
+                "TransitGatewayAttachmentId": "tgw-attach-test123",
+                "TransitGatewayId": "tgw-test123",
+                "VpcId": "vpc-test123",
+                "State": "available",
+                "Options": {
+                    "DnsSupport": "enable",
+                    "Ipv6Support": "disable",
+                },
+                "Tags": [{"Key": "Name", "Value": "Test TGW Attachment"}],
+            }
+        ]
     }
 
     client.describe_vpn_connections.return_value = {
-        "VpnConnections": [{
-            "VpnConnectionId": "vpn-test123",
-            "State": "available",
-            "Type": "ipsec.1",
-            "CustomerGatewayId": "cgw-test123",
-            "VpnGatewayId": "vgw-test123",
-            "Options": {
-                "StaticRoutesOnly": False,
-                "TunnelOptions": [{
-                    "OutsideIpAddress": "54.1.2.4",
-                    "TunnelInsideCidr": "169.254.10.0/30",
-                }]
-            },
-            "VgwTelemetry": [{
-                "OutsideIpAddress": "54.1.2.4",
-                "Status": "UP",
-                "LastStatusChange": "2025-01-24T00:00:00Z",
-                "AcceptedRouteCount": 5,
-            }],
-            "Tags": [{"Key": "Name", "Value": "Test VPN"}],
-        }]
+        "VpnConnections": [
+            {
+                "VpnConnectionId": "vpn-test123",
+                "State": "available",
+                "Type": "ipsec.1",
+                "CustomerGatewayId": "cgw-test123",
+                "VpnGatewayId": "vgw-test123",
+                "Options": {
+                    "StaticRoutesOnly": False,
+                    "TunnelOptions": [
+                        {
+                            "OutsideIpAddress": "54.1.2.4",
+                            "TunnelInsideCidr": "169.254.10.0/30",
+                        }
+                    ],
+                },
+                "VgwTelemetry": [
+                    {
+                        "OutsideIpAddress": "54.1.2.4",
+                        "Status": "UP",
+                        "LastStatusChange": "2025-01-24T00:00:00Z",
+                        "AcceptedRouteCount": 5,
+                    }
+                ],
+                "Tags": [{"Key": "Name", "Value": "Test VPN"}],
+            }
+        ]
     }
 
     client.describe_customer_gateways.return_value = {
-        "CustomerGateways": [{
-            "CustomerGatewayId": "cgw-test123",
-            "State": "available",
-            "Type": "ipsec.1",
-            "IpAddress": "203.0.113.1",
-            "BgpAsn": "65000",
-            "Tags": [{"Key": "Name", "Value": "Test CGW"}],
-        }]
+        "CustomerGateways": [
+            {
+                "CustomerGatewayId": "cgw-test123",
+                "State": "available",
+                "Type": "ipsec.1",
+                "IpAddress": "203.0.113.1",
+                "BgpAsn": "65000",
+                "Tags": [{"Key": "Name", "Value": "Test CGW"}],
+            }
+        ]
     }
 
     client.describe_vpn_gateways.return_value = {
-        "VpnGateways": [{
-            "VpnGatewayId": "vgw-test123",
-            "State": "available",
-            "Type": "ipsec.1",
-            "VpcAttachments": [{
-                "VpcId": "vpc-test123",
-                "State": "attached",
-            }],
-            "AmazonSideAsn": 64512,
-            "Tags": [{"Key": "Name", "Value": "Test VGW"}],
-        }]
+        "VpnGateways": [
+            {
+                "VpnGatewayId": "vgw-test123",
+                "State": "available",
+                "Type": "ipsec.1",
+                "VpcAttachments": [
+                    {
+                        "VpcId": "vpc-test123",
+                        "State": "attached",
+                    }
+                ],
+                "AmazonSideAsn": 64512,
+                "Tags": [{"Key": "Name", "Value": "Test VGW"}],
+            }
+        ]
     }
 
     client.describe_dhcp_options.return_value = {
-        "DhcpOptions": [{
-            "DhcpOptionsId": "dopt-test123",
-            "DhcpConfigurations": [
-                {
-                    "Key": "domain-name",
-                    "Values": [{"Value": "ec2.internal"}]
-                },
-                {
-                    "Key": "domain-name-servers",
-                    "Values": [{"Value": "AmazonProvidedDNS"}]
-                }
-            ],
-            "Tags": [{"Key": "Name", "Value": "Test DHCP"}],
-        }]
+        "DhcpOptions": [
+            {
+                "DhcpOptionsId": "dopt-test123",
+                "DhcpConfigurations": [
+                    {"Key": "domain-name", "Values": [{"Value": "ec2.internal"}]},
+                    {
+                        "Key": "domain-name-servers",
+                        "Values": [{"Value": "AmazonProvidedDNS"}],
+                    },
+                ],
+                "Tags": [{"Key": "Name", "Value": "Test DHCP"}],
+            }
+        ]
     }
 
     client.describe_flow_logs.return_value = {
-        "FlowLogs": [{
-            "FlowLogId": "fl-test123",
-            "ResourceId": "vpc-test123",
-            "TrafficType": "ALL",
-            "LogDestinationType": "cloud-watch-logs",
-            "LogDestination": "arn:aws:logs:us-east-1:123456789012:log-group:/aws/vpc/flowlogs",
-            "FlowLogStatus": "ACTIVE",
-            "Tags": [{"Key": "Name", "Value": "Test Flow Log"}],
-        }]
+        "FlowLogs": [
+            {
+                "FlowLogId": "fl-test123",
+                "ResourceId": "vpc-test123",
+                "TrafficType": "ALL",
+                "LogDestinationType": "cloud-watch-logs",
+                "LogDestination": "arn:aws:logs:us-east-1:123456789012:log-group:/aws/vpc/flowlogs",
+                "FlowLogStatus": "ACTIVE",
+                "Tags": [{"Key": "Name", "Value": "Test Flow Log"}],
+            }
+        ]
     }
 
     client.describe_network_interfaces.return_value = {
-        "NetworkInterfaces": [{
-            "NetworkInterfaceId": "eni-test123",
-            "SubnetId": "subnet-test123",
-            "VpcId": "vpc-test123",
-            "Status": "in-use",
-            "InterfaceType": "interface",
-            "PrivateIpAddress": "10.0.1.10",
-            "PrivateIpAddresses": [{
+        "NetworkInterfaces": [
+            {
+                "NetworkInterfaceId": "eni-test123",
+                "SubnetId": "subnet-test123",
+                "VpcId": "vpc-test123",
+                "Status": "in-use",
+                "InterfaceType": "interface",
                 "PrivateIpAddress": "10.0.1.10",
-                "Primary": True,
-            }],
-            "Groups": [{
-                "GroupId": "sg-test123",
-                "GroupName": "test-sg",
-            }],
-            "Attachment": {
-                "AttachmentId": "eni-attach-test123",
-                "InstanceId": "i-test123",
-                "Status": "attached",
-            },
-            "Tags": [{"Key": "Name", "Value": "Test ENI"}],
-        }]
+                "PrivateIpAddresses": [
+                    {
+                        "PrivateIpAddress": "10.0.1.10",
+                        "Primary": True,
+                    }
+                ],
+                "Groups": [
+                    {
+                        "GroupId": "sg-test123",
+                        "GroupName": "test-sg",
+                    }
+                ],
+                "Attachment": {
+                    "AttachmentId": "eni-attach-test123",
+                    "InstanceId": "i-test123",
+                    "Status": "attached",
+                },
+                "Tags": [{"Key": "Name", "Value": "Test ENI"}],
+            }
+        ]
     }
 
     client.describe_virtual_interfaces.return_value = {
-        "virtualInterfaces": [{
-            "virtualInterfaceId": "dxvif-test123",
-            "virtualInterfaceName": "Test VIF",
-            "virtualInterfaceType": "private",
-            "virtualInterfaceState": "available",
-            "vlan": 100,
-            "asn": 65000,
-            "bgpPeers": [{
-                "bgpPeerId": "peer-test123",
-                "bgpStatus": "up",
-                "bgpPeerState": "available",
+        "virtualInterfaces": [
+            {
+                "virtualInterfaceId": "dxvif-test123",
+                "virtualInterfaceName": "Test VIF",
+                "virtualInterfaceType": "private",
+                "virtualInterfaceState": "available",
+                "vlan": 100,
                 "asn": 65000,
-                "addressFamily": "ipv4",
-            }],
-        }]
+                "bgpPeers": [
+                    {
+                        "bgpPeerId": "peer-test123",
+                        "bgpStatus": "up",
+                        "bgpPeerState": "available",
+                        "asn": 65000,
+                        "addressFamily": "ipv4",
+                    }
+                ],
+            }
+        ]
     }
 
     return client
@@ -425,7 +482,9 @@ def test_section_filtering(mock_aws_client: AWSClient) -> None:
 
     # Collect only specific sections
     sections_to_collect = ["vpc", "subnets", "vpn_connections"]
-    result = collect_all_data_sync(mock_aws_client, vpc_id, sections=sections_to_collect)
+    result = collect_all_data_sync(
+        mock_aws_client, vpc_id, sections=sections_to_collect
+    )
 
     # Verify only requested sections are present
     assert len(result["sections"]) == 3
@@ -442,7 +501,9 @@ def test_vpn_tunnel_status_parsing(mock_aws_client: AWSClient) -> None:
     """Test that VPN tunnel status is correctly parsed."""
     vpc_id = "vpc-test123"
 
-    result = collect_all_data_sync(mock_aws_client, vpc_id, sections=["vpn_connections"])
+    result = collect_all_data_sync(
+        mock_aws_client, vpc_id, sections=["vpn_connections"]
+    )
 
     vpn_data = result["sections"]["vpn_connections"]["data"]
     vpns = vpn_data["vpn_connections"]
@@ -461,7 +522,9 @@ def test_network_interface_type_classification(mock_aws_client: AWSClient) -> No
     """Test that network interface types are correctly classified."""
     vpc_id = "vpc-test123"
 
-    result = collect_all_data_sync(mock_aws_client, vpc_id, sections=["network_interfaces"])
+    result = collect_all_data_sync(
+        mock_aws_client, vpc_id, sections=["network_interfaces"]
+    )
 
     eni_data = result["sections"]["network_interfaces"]["data"]
     enis = eni_data["network_interfaces"]
@@ -479,7 +542,9 @@ def test_direct_connect_bgp_status(mock_aws_client: AWSClient) -> None:
     """Test that Direct Connect BGP status is correctly parsed."""
     vpc_id = "vpc-test123"
 
-    result = collect_all_data_sync(mock_aws_client, vpc_id, sections=["direct_connect_vifs"])
+    result = collect_all_data_sync(
+        mock_aws_client, vpc_id, sections=["direct_connect_vifs"]
+    )
 
     vif_data = result["sections"]["direct_connect_vifs"]["data"]
     vifs = vif_data["virtual_interfaces"]

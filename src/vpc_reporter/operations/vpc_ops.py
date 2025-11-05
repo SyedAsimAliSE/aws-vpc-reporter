@@ -70,26 +70,34 @@ class VPCOperations:
         # Parse IPv6 CIDR block associations with full details
         ipv6_associations = []
         for assoc in vpc.get("Ipv6CidrBlockAssociationSet", []):
-            ipv6_associations.append({
-                "association_id": assoc.get("AssociationId"),
-                "ipv6_cidr_block": assoc.get("Ipv6CidrBlock"),
-                "ipv6_pool": assoc.get("Ipv6Pool"),
-                "network_border_group": assoc.get("NetworkBorderGroup"),
-                "ipv6_address_attribute": assoc.get("Ipv6AddressAttribute"),
-                "ip_source": assoc.get("IpSource"),
-                "state": assoc.get("Ipv6CidrBlockState", {}).get("State"),
-                "status_message": assoc.get("Ipv6CidrBlockState", {}).get("StatusMessage"),
-            })
+            ipv6_associations.append(
+                {
+                    "association_id": assoc.get("AssociationId"),
+                    "ipv6_cidr_block": assoc.get("Ipv6CidrBlock"),
+                    "ipv6_pool": assoc.get("Ipv6Pool"),
+                    "network_border_group": assoc.get("NetworkBorderGroup"),
+                    "ipv6_address_attribute": assoc.get("Ipv6AddressAttribute"),
+                    "ip_source": assoc.get("IpSource"),
+                    "state": assoc.get("Ipv6CidrBlockState", {}).get("State"),
+                    "status_message": assoc.get("Ipv6CidrBlockState", {}).get(
+                        "StatusMessage"
+                    ),
+                }
+            )
 
         # Parse IPv4 CIDR block associations with full details
         cidr_associations = []
         for assoc in vpc.get("CidrBlockAssociationSet", []):
-            cidr_associations.append({
-                "association_id": assoc.get("AssociationId"),
-                "cidr_block": assoc.get("CidrBlock"),
-                "state": assoc.get("CidrBlockState", {}).get("State"),
-                "status_message": assoc.get("CidrBlockState", {}).get("StatusMessage"),
-            })
+            cidr_associations.append(
+                {
+                    "association_id": assoc.get("AssociationId"),
+                    "cidr_block": assoc.get("CidrBlock"),
+                    "state": assoc.get("CidrBlockState", {}).get("State"),
+                    "status_message": assoc.get("CidrBlockState", {}).get(
+                        "StatusMessage"
+                    ),
+                }
+            )
 
         return {
             "vpc_id": vpc["VpcId"],
@@ -101,10 +109,18 @@ class VPCOperations:
             "owner_id": vpc.get("OwnerId"),
             # IPv6 configuration with full details
             "ipv6_cidr_block_associations": ipv6_associations,
-            "ipv6_cidr_blocks": [assoc["ipv6_cidr_block"] for assoc in ipv6_associations if assoc["ipv6_cidr_block"]],
+            "ipv6_cidr_blocks": [
+                assoc["ipv6_cidr_block"]
+                for assoc in ipv6_associations
+                if assoc["ipv6_cidr_block"]
+            ],
             # IPv4 CIDR associations with full details
             "cidr_block_associations": cidr_associations,
-            "additional_cidr_blocks": [assoc["cidr_block"] for assoc in cidr_associations if assoc["cidr_block"] != vpc["CidrBlock"]],
+            "additional_cidr_blocks": [
+                assoc["cidr_block"]
+                for assoc in cidr_associations
+                if assoc["cidr_block"] != vpc["CidrBlock"]
+            ],
             # Tags
             "tags": vpc.get("Tags", []),
             "name": self._get_tag_value(vpc.get("Tags", []), "Name"),

@@ -52,7 +52,9 @@ def generate_markdown(data: dict[str, Any]) -> str:
 
     # Internet Gateways
     if "internet_gateways" in sections:
-        md_parts.append(_generate_internet_gateways_section(sections["internet_gateways"]))
+        md_parts.append(
+            _generate_internet_gateways_section(sections["internet_gateways"])
+        )
 
     # NAT Gateways
     if "nat_gateways" in sections:
@@ -72,7 +74,9 @@ def generate_markdown(data: dict[str, Any]) -> str:
 
     # Transit Gateway Attachments
     if "transit_gateway_attachments" in sections:
-        md_parts.append(_generate_transit_gateway_section(sections["transit_gateway_attachments"]))
+        md_parts.append(
+            _generate_transit_gateway_section(sections["transit_gateway_attachments"])
+        )
 
     # VPN Connections
     if "vpn_connections" in sections:
@@ -80,7 +84,9 @@ def generate_markdown(data: dict[str, Any]) -> str:
 
     # Customer Gateways
     if "customer_gateways" in sections:
-        md_parts.append(_generate_customer_gateways_section(sections["customer_gateways"]))
+        md_parts.append(
+            _generate_customer_gateways_section(sections["customer_gateways"])
+        )
 
     # VPN Gateways
     if "vpn_gateways" in sections:
@@ -96,7 +102,9 @@ def generate_markdown(data: dict[str, Any]) -> str:
 
     # Network Interfaces
     if "network_interfaces" in sections:
-        md_parts.append(_generate_network_interfaces_section(sections["network_interfaces"]))
+        md_parts.append(
+            _generate_network_interfaces_section(sections["network_interfaces"])
+        )
 
     # VPC Attributes
     if "vpc_attributes" in sections:
@@ -104,7 +112,9 @@ def generate_markdown(data: dict[str, Any]) -> str:
 
     # Direct Connect VIFs
     if "direct_connect_vifs" in sections:
-        md_parts.append(_generate_direct_connect_vifs_section(sections["direct_connect_vifs"]))
+        md_parts.append(
+            _generate_direct_connect_vifs_section(sections["direct_connect_vifs"])
+        )
 
     # Footer
     md_parts.append(_generate_footer())
@@ -112,7 +122,9 @@ def generate_markdown(data: dict[str, Any]) -> str:
     return "\n\n".join(md_parts)
 
 
-def _generate_header(vpc_id: str, region: str, profile: str, sections: dict[str, Any]) -> str:
+def _generate_header(
+    vpc_id: str, region: str, profile: str, sections: dict[str, Any]
+) -> str:
     """Generate report header."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S %Z")
 
@@ -288,7 +300,9 @@ def _generate_security_groups_section(section_data: dict[str, Any]) -> str:
     for sg in security_groups:
         md += f"| {sg['group_id']} | "
         md += f"{sg.get('name', sg['group_name'])} | "
-        md += f"{sg['description'][:50]}{'...' if len(sg['description']) > 50 else ''} | "
+        md += (
+            f"{sg['description'][:50]}{'...' if len(sg['description']) > 50 else ''} | "
+        )
         md += f"{sg['inbound_rules_count']} | "
         md += f"{sg['outbound_rules_count']} |\n"
 
@@ -470,7 +484,13 @@ def _generate_nat_gateways_section(section_data: dict[str, Any]) -> str:
     md += "|-----------|------|-------|-----------|-------------|\n"
 
     for nat in nat_gws:
-        public_ips = ", ".join([addr["public_ip"] for addr in nat["nat_gateway_addresses"] if addr.get("public_ip")])
+        public_ips = ", ".join(
+            [
+                addr["public_ip"]
+                for addr in nat["nat_gateway_addresses"]
+                if addr.get("public_ip")
+            ]
+        )
         md += f"| {nat['nat_gateway_id']} | "
         md += f"{nat.get('name', '<No Name>')} | "
         md += f"{nat['state']} | "
@@ -557,7 +577,9 @@ def _generate_vpc_peering_section(section_data: dict[str, Any]) -> str:
     for peer in peerings:
         md += f"| {peer['vpc_peering_connection_id']} | "
         md += f"{peer.get('name', 'N/A')} | "
-        md += f"{peer['requester_vpc']['vpc_id']} ({peer['requester_vpc']['region']}) | "
+        md += (
+            f"{peer['requester_vpc']['vpc_id']} ({peer['requester_vpc']['region']}) | "
+        )
         md += f"{peer['accepter_vpc']['vpc_id']} ({peer['accepter_vpc']['region']}) | "
         md += f"{peer['status_code']} | "
         md += f"{'Yes' if peer['is_cross_account'] else 'No'} | "
@@ -624,7 +646,9 @@ def _generate_vpn_connections_section(section_data: dict[str, Any]) -> str:
     md += "\n### VPN Tunnel Details\n\n"
     for vpn in vpns:
         if vpn.get("vgw_telemetry"):
-            md += f"#### {vpn['vpn_connection_id']} - {vpn.get('name', '<No Name>')}\n\n"
+            md += (
+                f"#### {vpn['vpn_connection_id']} - {vpn.get('name', '<No Name>')}\n\n"
+            )
             md += "| Outside IP | Status | Last Status Change | Accepted Routes |\n"
             md += "|------------|--------|-------------------|----------------|\n"
             for tunnel in vpn["vgw_telemetry"]:
@@ -750,7 +774,9 @@ def _generate_flow_logs_section(section_data: dict[str, Any]) -> str:
 def _generate_network_interfaces_section(section_data: dict[str, Any]) -> str:
     """Generate Network Interfaces section."""
     if not section_data.get("success"):
-        return "## Network Interfaces\n\n**Error:** Unable to retrieve network interfaces"
+        return (
+            "## Network Interfaces\n\n**Error:** Unable to retrieve network interfaces"
+        )
 
     data = section_data["data"]
     enis = data.get("network_interfaces", [])
@@ -769,7 +795,9 @@ def _generate_network_interfaces_section(section_data: dict[str, Any]) -> str:
         md += "### Interface Type Summary\n\n"
         md += "| Interface Type | Count |\n"
         md += "|----------------|------:|\n"
-        for itype, count in sorted(type_counts.items(), key=lambda x: x[1], reverse=True):
+        for itype, count in sorted(
+            type_counts.items(), key=lambda x: x[1], reverse=True
+        ):
             md += f"| {itype} | {count} |\n"
         md += "\n"
 
@@ -779,7 +807,7 @@ def _generate_network_interfaces_section(section_data: dict[str, Any]) -> str:
     md += "|--------|------|--------|------------|-------------|-------------|\n"
 
     for eni in enis:
-        description = eni.get('description') or '-'
+        description = eni.get("description") or "-"
         md += f"| {eni['network_interface_id']} | "
         md += f"{eni['interface_type']} | "
         md += f"{eni['status']} | "
@@ -838,8 +866,12 @@ def _generate_direct_connect_vifs_section(section_data: dict[str, Any]) -> str:
     for vif in vifs:
         if vif.get("bgp_peers"):
             md += f"#### {vif['virtual_interface_id']} - {vif.get('name', '<No Name>')}\n\n"
-            md += "| BGP Peer IP | BGP Status | BGP Peer State | ASN | Address Family |\n"
-            md += "|-------------|------------|----------------|-----|----------------|\n"
+            md += (
+                "| BGP Peer IP | BGP Status | BGP Peer State | ASN | Address Family |\n"
+            )
+            md += (
+                "|-------------|------------|----------------|-----|----------------|\n"
+            )
             for peer in vif["bgp_peers"]:
                 md += f"| {peer.get('bgp_peer_address', '-')} | "
                 md += f"{peer.get('bgp_status', 'unknown')} | "

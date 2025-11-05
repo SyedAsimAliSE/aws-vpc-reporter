@@ -18,6 +18,7 @@ def execute_list_vpcs(
 
     if not region:
         from vpc_reporter.cli.report_command import _select_region_interactive
+
         region = _select_region_interactive(console)
 
     console.print(f"[cyan]Fetching VPCs in {region}...[/cyan]\n")

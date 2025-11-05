@@ -38,10 +38,11 @@ class VPCAttributesOperations:
         # Get enableDnsSupport
         try:
             response = self.client.describe_vpc_attribute(
-                VpcId=vpc_id,
-                Attribute="enableDnsSupport"
+                VpcId=vpc_id, Attribute="enableDnsSupport"
             )
-            attributes["enable_dns_support"] = response.get("EnableDnsSupport", {}).get("Value", False)
+            attributes["enable_dns_support"] = response.get("EnableDnsSupport", {}).get(
+                "Value", False
+            )
         except Exception as e:
             logger.warning(f"Failed to get enableDnsSupport: {e}")
             attributes["enable_dns_support"] = None
@@ -49,10 +50,11 @@ class VPCAttributesOperations:
         # Get enableDnsHostnames
         try:
             response = self.client.describe_vpc_attribute(
-                VpcId=vpc_id,
-                Attribute="enableDnsHostnames"
+                VpcId=vpc_id, Attribute="enableDnsHostnames"
             )
-            attributes["enable_dns_hostnames"] = response.get("EnableDnsHostnames", {}).get("Value", False)
+            attributes["enable_dns_hostnames"] = response.get(
+                "EnableDnsHostnames", {}
+            ).get("Value", False)
         except Exception as e:
             logger.warning(f"Failed to get enableDnsHostnames: {e}")
             attributes["enable_dns_hostnames"] = None
@@ -60,8 +62,7 @@ class VPCAttributesOperations:
         # Get enableNetworkAddressUsageMetrics
         try:
             response = self.client.describe_vpc_attribute(
-                VpcId=vpc_id,
-                Attribute="enableNetworkAddressUsageMetrics"
+                VpcId=vpc_id, Attribute="enableNetworkAddressUsageMetrics"
             )
             attributes["enable_network_address_usage_metrics"] = response.get(
                 "EnableNetworkAddressUsageMetrics", {}

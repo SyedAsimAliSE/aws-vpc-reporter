@@ -75,7 +75,9 @@ class ElasticIPOperations:
         return {
             "total_count": len(processed_eips),
             "associated_count": len([e for e in processed_eips if e["is_associated"]]),
-            "unassociated_count": len([e for e in processed_eips if not e["is_associated"]]),
+            "unassociated_count": len(
+                [e for e in processed_eips if not e["is_associated"]]
+            ),
             "elastic_ips": processed_eips,
             "raw_data": addresses,
         }

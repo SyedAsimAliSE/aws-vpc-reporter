@@ -51,7 +51,9 @@ class AWSClient:
             self.ec2 = self.session.client("ec2")
             self.directconnect = self.session.client("directconnect")
 
-            logger.info(f"Initialized AWS client for profile={profile}, region={region}")
+            logger.info(
+                f"Initialized AWS client for profile={profile}, region={region}"
+            )
         except ProfileNotFound as e:
             raise AWSProfileNotFoundError(f"AWS profile '{profile}' not found") from e
         except NoCredentialsError as e:
@@ -117,17 +119,23 @@ class AWSClient:
     def describe_route_tables(self, **kwargs: Any) -> dict[str, Any]:
         """Describe route tables."""
         cache_key = f"describe_route_tables:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_route_tables, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_route_tables, **kwargs
+        )
 
     def describe_internet_gateways(self, **kwargs: Any) -> dict[str, Any]:
         """Describe internet gateways."""
         cache_key = f"describe_internet_gateways:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_internet_gateways, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_internet_gateways, **kwargs
+        )
 
     def describe_nat_gateways(self, **kwargs: Any) -> dict[str, Any]:
         """Describe NAT gateways."""
         cache_key = f"describe_nat_gateways:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_nat_gateways, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_nat_gateways, **kwargs
+        )
 
     def describe_addresses(self, **kwargs: Any) -> dict[str, Any]:
         """Describe Elastic IP addresses."""
@@ -137,52 +145,72 @@ class AWSClient:
     def describe_vpc_peering_connections(self, **kwargs: Any) -> dict[str, Any]:
         """Describe VPC peering connections."""
         cache_key = f"describe_vpc_peering_connections:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_vpc_peering_connections, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_vpc_peering_connections, **kwargs
+        )
 
     def describe_transit_gateway_vpc_attachments(self, **kwargs: Any) -> dict[str, Any]:
         """Describe Transit Gateway VPC attachments."""
         cache_key = f"describe_transit_gateway_vpc_attachments:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_transit_gateway_vpc_attachments, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_transit_gateway_vpc_attachments, **kwargs
+        )
 
     def describe_vpn_connections(self, **kwargs: Any) -> dict[str, Any]:
         """Describe VPN connections."""
         cache_key = f"describe_vpn_connections:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_vpn_connections, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_vpn_connections, **kwargs
+        )
 
     def describe_vpn_gateways(self, **kwargs: Any) -> dict[str, Any]:
         """Describe VPN gateways."""
         cache_key = f"describe_vpn_gateways:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_vpn_gateways, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_vpn_gateways, **kwargs
+        )
 
     def describe_customer_gateways(self, **kwargs: Any) -> dict[str, Any]:
         """Describe customer gateways."""
         cache_key = f"describe_customer_gateways:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_customer_gateways, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_customer_gateways, **kwargs
+        )
 
     def describe_vpc_endpoints(self, **kwargs: Any) -> dict[str, Any]:
         """Describe VPC endpoints."""
         cache_key = f"describe_vpc_endpoints:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_vpc_endpoints, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_vpc_endpoints, **kwargs
+        )
 
     def describe_security_groups(self, **kwargs: Any) -> dict[str, Any]:
         """Describe security groups."""
         cache_key = f"describe_security_groups:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_security_groups, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_security_groups, **kwargs
+        )
 
     def describe_network_acls(self, **kwargs: Any) -> dict[str, Any]:
         """Describe network ACLs."""
         cache_key = f"describe_network_acls:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_network_acls, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_network_acls, **kwargs
+        )
 
     def describe_network_interfaces(self, **kwargs: Any) -> dict[str, Any]:
         """Describe network interfaces."""
         cache_key = f"describe_network_interfaces:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_network_interfaces, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_network_interfaces, **kwargs
+        )
 
     def describe_dhcp_options(self, **kwargs: Any) -> dict[str, Any]:
         """Describe DHCP options."""
         cache_key = f"describe_dhcp_options:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_dhcp_options, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_dhcp_options, **kwargs
+        )
 
     def describe_flow_logs(self, **kwargs: Any) -> dict[str, Any]:
         """Describe VPC flow logs."""
@@ -192,9 +220,13 @@ class AWSClient:
     def describe_virtual_interfaces(self, **kwargs: Any) -> dict[str, Any]:
         """Describe Direct Connect virtual interfaces."""
         cache_key = f"describe_virtual_interfaces:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.directconnect.describe_virtual_interfaces, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.directconnect.describe_virtual_interfaces, **kwargs
+        )
 
     def describe_vpc_attribute(self, **kwargs: Any) -> dict[str, Any]:
         """Describe VPC attribute (requires VpcId and Attribute parameters)."""
         cache_key = f"describe_vpc_attribute:{self.region}:{kwargs}"
-        return self._call_with_cache(cache_key, self.ec2.describe_vpc_attribute, **kwargs)
+        return self._call_with_cache(
+            cache_key, self.ec2.describe_vpc_attribute, **kwargs
+        )

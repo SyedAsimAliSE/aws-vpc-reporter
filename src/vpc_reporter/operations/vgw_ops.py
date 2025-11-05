@@ -42,23 +42,31 @@ class VirtualPrivateGatewayOperations:
             # Parse VPC attachments
             attachments = []
             for attachment in vgw.get("VpcAttachments", []):
-                attachments.append({
-                    "vpc_id": attachment.get("VpcId"),
-                    "state": attachment.get("State"),
-                })
+                attachments.append(
+                    {
+                        "vpc_id": attachment.get("VpcId"),
+                        "state": attachment.get("State"),
+                    }
+                )
 
-            processed_vgws.append({
-                "vpn_gateway_id": vgw["VpnGatewayId"],
-                "state": vgw.get("State"),
-                "type": vgw.get("Type", "ipsec.1"),
-                "availability_zone": vgw.get("AvailabilityZone"),
-                "vpc_attachments": attachments,
-                "attached_vpc_id": attachments[0]["vpc_id"] if attachments else None,
-                "attachment_state": attachments[0]["state"] if attachments else None,
-                "amazon_side_asn": vgw.get("AmazonSideAsn"),
-                "tags": vgw.get("Tags", []),
-                "name": self._get_tag_value(vgw.get("Tags", []), "Name"),
-            })
+            processed_vgws.append(
+                {
+                    "vpn_gateway_id": vgw["VpnGatewayId"],
+                    "state": vgw.get("State"),
+                    "type": vgw.get("Type", "ipsec.1"),
+                    "availability_zone": vgw.get("AvailabilityZone"),
+                    "vpc_attachments": attachments,
+                    "attached_vpc_id": (
+                        attachments[0]["vpc_id"] if attachments else None
+                    ),
+                    "attachment_state": (
+                        attachments[0]["state"] if attachments else None
+                    ),
+                    "amazon_side_asn": vgw.get("AmazonSideAsn"),
+                    "tags": vgw.get("Tags", []),
+                    "name": self._get_tag_value(vgw.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_vgws)} VPN gateways")
 

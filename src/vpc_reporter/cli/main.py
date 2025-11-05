@@ -202,15 +202,29 @@ def config(ctx: click.Context, init: bool, show: bool, path: str | None) -> None
             config_mgr = ConfigManager(path)
             console.print("\n[bold]Current Configuration:[/bold]\n")
             console.print(f"[cyan]AWS Profile:[/cyan] {config_mgr.get_aws_profile()}")
-            console.print(f"[cyan]Default Region:[/cyan] {config_mgr.get_default_region()}")
-            console.print(f"[cyan]Available Regions:[/cyan] {', '.join(config_mgr.get_regions())}")
-            console.print(f"[cyan]Output Format:[/cyan] {config_mgr.get_output_format()}")
-            console.print(f"[cyan]Output Directory:[/cyan] {config_mgr.get_output_directory()}")
-            console.print(f"[cyan]Cache Enabled:[/cyan] {config_mgr.is_cache_enabled()}")
+            console.print(
+                f"[cyan]Default Region:[/cyan] {config_mgr.get_default_region()}"
+            )
+            console.print(
+                f"[cyan]Available Regions:[/cyan] {', '.join(config_mgr.get_regions())}"
+            )
+            console.print(
+                f"[cyan]Output Format:[/cyan] {config_mgr.get_output_format()}"
+            )
+            console.print(
+                f"[cyan]Output Directory:[/cyan] {config_mgr.get_output_directory()}"
+            )
+            console.print(
+                f"[cyan]Cache Enabled:[/cyan] {config_mgr.is_cache_enabled()}"
+            )
             console.print(f"[cyan]Cache TTL:[/cyan] {config_mgr.get_cache_ttl()}s")
-            console.print(f"[cyan]Cache Directory:[/cyan] {config_mgr.get_cache_directory()}\n")
+            console.print(
+                f"[cyan]Cache Directory:[/cyan] {config_mgr.get_cache_directory()}\n"
+            )
         else:
-            console.print("[yellow]Use --init to create config or --show to view current config[/yellow]")
+            console.print(
+                "[yellow]Use --init to create config or --show to view current config[/yellow]"
+            )
     except Exception as e:
         console.print(f"[bold red]Error:[/bold red] {e}")
         if ctx.obj.get("verbose"):
@@ -235,7 +249,9 @@ def config(ctx: click.Context, init: bool, show: bool, path: str | None) -> None
     help="Diagram style: simple (basic overview) or comprehensive (all resources)",
 )
 @click.pass_context
-def diagram(ctx: click.Context, vpc_id: str | None, output: str | None, style: str) -> None:
+def diagram(
+    ctx: click.Context, vpc_id: str | None, output: str | None, style: str
+) -> None:
     """Generate VPC network diagram code.
 
     Examples:
@@ -248,14 +264,17 @@ def diagram(ctx: click.Context, vpc_id: str | None, output: str | None, style: s
     region = ctx.obj["region"]
 
     from vpc_reporter.aws.client import AWSClient
+    from vpc_reporter.diagrams.comprehensive_generator import (
+        ComprehensiveDiagramGenerator,
+    )
     from vpc_reporter.diagrams.generator import DiagramGenerator
-    from vpc_reporter.diagrams.comprehensive_generator import ComprehensiveDiagramGenerator
     from vpc_reporter.operations.sync_collector import collect_all_data_sync
 
     try:
         # Get VPC ID if not provided
         if not vpc_id:
             from vpc_reporter.cli.list_command import select_vpc_interactive
+
             vpc_id = select_vpc_interactive(console, profile, region)
             if not vpc_id:
                 console.print("[yellow]No VPC selected[/yellow]")
@@ -287,7 +306,9 @@ def diagram(ctx: click.Context, vpc_id: str | None, output: str | None, style: s
             with open(output, "w") as f:
                 f.write(diagram_code)
             console.print(f"\n[green]✓ Diagram code saved to:[/green] {output}")
-            console.print(f"\n[cyan]To generate the diagram, run:[/cyan] uv run python {output}")
+            console.print(
+                f"\n[cyan]To generate the diagram, run:[/cyan] uv run python {output}"
+            )
             console.print(f"[dim]Or with system Python:[/dim] python3 {output}")
         else:
             console.print("\n[bold]Generated Diagram Code:[/bold]\n")
@@ -326,6 +347,7 @@ def cost(ctx: click.Context, vpc_id: str | None) -> None:
         # Get VPC ID if not provided
         if not vpc_id:
             from vpc_reporter.cli.list_command import select_vpc_interactive
+
             vpc_id = select_vpc_interactive(console, profile, region)
             if not vpc_id:
                 console.print("[yellow]No VPC selected[/yellow]")
@@ -352,11 +374,13 @@ def cost(ctx: click.Context, vpc_id: str | None) -> None:
             table.add_row(
                 driver["resource"],
                 f"${driver['monthly_cost']:.2f}",
-                driver["description"]
+                driver["description"],
             )
 
         console.print(table)
-        console.print(f"\n[bold]Total Monthly Cost:[/bold] [green]${cost_breakdown['total_monthly_cost']:.2f}[/green]\n")
+        console.print(
+            f"\n[bold]Total Monthly Cost:[/bold] [green]${cost_breakdown['total_monthly_cost']:.2f}[/green]\n"
+        )
 
         # Display recommendations
         recommendations = analyzer.generate_cost_recommendations(cost_breakdown)

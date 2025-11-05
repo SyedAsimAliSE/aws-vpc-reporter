@@ -20,7 +20,7 @@ class TestAWSClient:
 
     def test_init_success(self) -> None:
         """Test successful client initialization."""
-        with patch('boto3.Session') as mock_session:
+        with patch("boto3.Session") as mock_session:
             mock_ec2 = MagicMock()
             mock_dc = MagicMock()
             mock_session.return_value.client.side_effect = [mock_ec2, mock_dc]
@@ -34,19 +34,19 @@ class TestAWSClient:
 
     def test_init_profile_not_found(self) -> None:
         """Test initialization with non-existent profile."""
-        with patch('boto3.Session', side_effect=ProfileNotFound(profile="fake")):
+        with patch("boto3.Session", side_effect=ProfileNotFound(profile="fake")):
             with pytest.raises(AWSProfileNotFoundError):
                 AWSClient(profile="fake", region="us-east-1")
 
     def test_init_no_credentials(self) -> None:
         """Test initialization with no credentials."""
-        with patch('boto3.Session', side_effect=NoCredentialsError()):
+        with patch("boto3.Session", side_effect=NoCredentialsError()):
             with pytest.raises(AWSAuthenticationError):
                 AWSClient(profile="test", region="us-east-1")
 
     def test_cache_disabled(self) -> None:
         """Test client with caching disabled."""
-        with patch('boto3.Session') as mock_session:
+        with patch("boto3.Session") as mock_session:
             mock_ec2 = MagicMock()
             mock_dc = MagicMock()
             mock_session.return_value.client.side_effect = [mock_ec2, mock_dc]
@@ -58,7 +58,7 @@ class TestAWSClient:
 
     def test_custom_cache_ttl(self) -> None:
         """Test client with custom cache TTL."""
-        with patch('boto3.Session') as mock_session:
+        with patch("boto3.Session") as mock_session:
             mock_ec2 = MagicMock()
             mock_dc = MagicMock()
             mock_session.return_value.client.side_effect = [mock_ec2, mock_dc]
@@ -69,7 +69,7 @@ class TestAWSClient:
 
     def test_call_with_cache_hit(self) -> None:
         """Test API call with cache hit."""
-        with patch('boto3.Session') as mock_session:
+        with patch("boto3.Session") as mock_session:
             mock_ec2 = MagicMock()
             mock_dc = MagicMock()
             mock_session.return_value.client.side_effect = [mock_ec2, mock_dc]
@@ -88,7 +88,7 @@ class TestAWSClient:
 
     def test_call_with_cache_miss(self) -> None:
         """Test API call with cache miss."""
-        with patch('boto3.Session') as mock_session:
+        with patch("boto3.Session") as mock_session:
             mock_ec2 = MagicMock()
             mock_dc = MagicMock()
             mock_session.return_value.client.side_effect = [mock_ec2, mock_dc]
@@ -108,7 +108,7 @@ class TestAWSClient:
 
     def test_call_with_client_error(self) -> None:
         """Test API call that raises ClientError."""
-        with patch('boto3.Session') as mock_session:
+        with patch("boto3.Session") as mock_session:
             mock_ec2 = MagicMock()
             mock_dc = MagicMock()
             mock_session.return_value.client.side_effect = [mock_ec2, mock_dc]
@@ -116,12 +116,11 @@ class TestAWSClient:
             client = AWSClient(profile="test", region="us-east-1", use_cache=False)
 
             error_response = {
-                "Error": {
-                    "Code": "InvalidVpcID.NotFound",
-                    "Message": "VPC not found"
-                }
+                "Error": {"Code": "InvalidVpcID.NotFound", "Message": "VPC not found"}
             }
-            mock_func = MagicMock(side_effect=ClientError(error_response, "DescribeVpcs"))
+            mock_func = MagicMock(
+                side_effect=ClientError(error_response, "DescribeVpcs")
+            )
 
             with pytest.raises(AWSClientError) as exc_info:
                 client._call_with_cache("test_key", mock_func)

@@ -42,20 +42,28 @@ class InternetGatewayOperations:
             # Parse attachments
             attachments = []
             for attachment in igw.get("Attachments", []):
-                attachments.append({
-                    "vpc_id": attachment.get("VpcId"),
-                    "state": attachment.get("State"),
-                })
+                attachments.append(
+                    {
+                        "vpc_id": attachment.get("VpcId"),
+                        "state": attachment.get("State"),
+                    }
+                )
 
-            processed_igws.append({
-                "internet_gateway_id": igw["InternetGatewayId"],
-                "owner_id": igw.get("OwnerId"),
-                "attachments": attachments,
-                "attached_vpc_id": attachments[0]["vpc_id"] if attachments else None,
-                "attachment_state": attachments[0]["state"] if attachments else None,
-                "tags": igw.get("Tags", []),
-                "name": self._get_tag_value(igw.get("Tags", []), "Name"),
-            })
+            processed_igws.append(
+                {
+                    "internet_gateway_id": igw["InternetGatewayId"],
+                    "owner_id": igw.get("OwnerId"),
+                    "attachments": attachments,
+                    "attached_vpc_id": (
+                        attachments[0]["vpc_id"] if attachments else None
+                    ),
+                    "attachment_state": (
+                        attachments[0]["state"] if attachments else None
+                    ),
+                    "tags": igw.get("Tags", []),
+                    "name": self._get_tag_value(igw.get("Tags", []), "Name"),
+                }
+            )
 
         logger.info(f"Found {len(processed_igws)} internet gateways")
 
