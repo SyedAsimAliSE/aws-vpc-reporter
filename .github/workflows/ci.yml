@@ -95,7 +95,7 @@ jobs:
       run: |
         pip install safety
         # Generate requirements file and scan only project dependencies
-        uv pip freeze --requirements-only > requirements.txt
+        uv pip freeze > requirements.txt
         safety check -r requirements.txt --json --output safety-report.json || true
         safety check -r requirements.txt || true
         echo "Safety scan completed for project dependencies"
