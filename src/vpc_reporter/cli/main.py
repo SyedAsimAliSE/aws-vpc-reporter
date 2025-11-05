@@ -274,7 +274,9 @@ def diagram(
         # Get VPC ID if not provided
         if not vpc_id:
             # TODO: Implement interactive VPC selection
-            console.print("[red]Error: VPC ID is required. Please use --vpc-id parameter.[/red]")
+            console.print(
+                "[red]Error: VPC ID is required. Please use --vpc-id parameter.[/red]"
+            )
             return
 
         console.print(f"\n[bold]Generating {style} diagram for VPC:[/bold] {vpc_id}\n")
@@ -344,7 +346,9 @@ def cost(ctx: click.Context, vpc_id: str | None) -> None:
         # Get VPC ID if not provided
         if not vpc_id:
             # TODO: Implement interactive VPC selection
-            console.print("[red]Error: VPC ID is required. Please use --vpc-id parameter.[/red]")
+            console.print(
+                "[red]Error: VPC ID is required. Please use --vpc-id parameter.[/red]"
+            )
             return
 
         console.print(f"\n[bold]Analyzing costs for VPC:[/bold] {vpc_id}\n")
