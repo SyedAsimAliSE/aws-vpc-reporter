@@ -273,12 +273,9 @@ def diagram(
     try:
         # Get VPC ID if not provided
         if not vpc_id:
-            from vpc_reporter.cli.list_command import select_vpc_interactive
-
-            vpc_id = select_vpc_interactive(console, profile, region)
-            if not vpc_id:
-                console.print("[yellow]No VPC selected[/yellow]")
-                return
+            # TODO: Implement interactive VPC selection
+            console.print("[red]Error: VPC ID is required. Please use --vpc-id parameter.[/red]")
+            return
 
         console.print(f"\n[bold]Generating {style} diagram for VPC:[/bold] {vpc_id}\n")
 
@@ -298,8 +295,8 @@ def diagram(
             console.print("  • NAT Gateways, VPC Endpoints, VPN connections")
             console.print("  • Transit Gateway, VPC Peering, and network flows")
         else:
-            generator = DiagramGenerator()
-            diagram_code = generator.generate_vpc_diagram(vpc_data, output)
+            simple_generator = DiagramGenerator()
+            diagram_code = simple_generator.generate_vpc_diagram(vpc_data)
 
         # Save or display
         if output:
@@ -346,12 +343,9 @@ def cost(ctx: click.Context, vpc_id: str | None) -> None:
     try:
         # Get VPC ID if not provided
         if not vpc_id:
-            from vpc_reporter.cli.list_command import select_vpc_interactive
-
-            vpc_id = select_vpc_interactive(console, profile, region)
-            if not vpc_id:
-                console.print("[yellow]No VPC selected[/yellow]")
-                return
+            # TODO: Implement interactive VPC selection
+            console.print("[red]Error: VPC ID is required. Please use --vpc-id parameter.[/red]")
+            return
 
         console.print(f"\n[bold]Analyzing costs for VPC:[/bold] {vpc_id}\n")
 

@@ -67,7 +67,7 @@ class AWSClient:
         func: Any,
         *args: Any,
         **kwargs: Any,
-    ) -> Any:
+    ) -> dict[str, Any]:
         """Call AWS API with optional caching.
 
         Args:
@@ -84,7 +84,7 @@ class AWSClient:
             cached_result = self.cache.get(cache_key)
             if cached_result is not None:
                 logger.debug(f"Cache hit for {cache_key}")
-                return cached_result
+                return cached_result  # type: ignore[no-any-return]
 
         # Call API
         try:
@@ -95,7 +95,7 @@ class AWSClient:
                 self.cache.set(cache_key, result, ttl=self.cache_ttl)
                 logger.debug(f"Cached result for {cache_key}")
 
-            return result
+            return result  # type: ignore[no-any-return]
         except ClientError as e:
             error_code = e.response.get("Error", {}).get("Code", "Unknown")
             error_message = e.response.get("Error", {}).get("Message", str(e))

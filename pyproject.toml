@@ -70,6 +70,22 @@ disallow_untyped_defs = true
 disallow_any_generics = true
 check_untyped_defs = true
 no_implicit_reexport = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "boto3.*",
+    "botocore.*",
+    "aioboto3.*",
+    "diskcache.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "vpc_reporter.diagrams.comprehensive_generator",
+]
+disable_error_code = ["type-arg"]
 
 [tool.pytest.ini_options]
 markers = [

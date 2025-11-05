@@ -132,7 +132,7 @@ def collect_all_data_sync(
 
     for section_name, collector_func in sections_to_collect.items():
         try:
-            data["sections"][section_name] = collector_func()
+            data["sections"][section_name] = collector_func()  # type: ignore[no-untyped-call]
         except Exception as e:
             logger.error(f"Error collecting {section_name}: {e}")
             data["sections"][section_name] = {

@@ -191,4 +191,4 @@ def _select_vpc_interactive(console: Console, profile: str, region: str) -> str:
         raise ValueError("Invalid VPC input")
 
     console.print(f"[green]✓[/green] Selected VPC: {vpc_id}\n")
-    return vpc_id
+    return vpc_id  # type: ignore[no-any-return]

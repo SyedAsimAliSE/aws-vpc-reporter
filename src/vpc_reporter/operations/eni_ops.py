@@ -195,7 +195,7 @@ class NetworkInterfaceOperations:
             )
 
         # Count by interface type
-        type_counts = {}
+        type_counts: dict[str, int] = {}
         for eni in processed_enis:
             itype = eni["interface_type"]
             type_counts[itype] = type_counts.get(itype, 0) + 1

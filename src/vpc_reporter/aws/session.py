@@ -5,6 +5,7 @@ from __future__ import annotations
 import aioboto3
 import boto3
 from botocore.exceptions import NoCredentialsError, ProfileNotFound
+from typing import Any
 
 from vpc_reporter.aws.exceptions import (
     AWSAuthenticationError,
@@ -42,7 +43,7 @@ class AWSSession:
         except NoCredentialsError as e:
             raise AWSAuthenticationError("AWS credentials not found") from e
 
-    def get_sync_client(self, service: str) -> any:
+    def get_sync_client(self, service: str) -> Any:
         """Get synchronous boto3 client.
 
         Args:
@@ -53,7 +54,7 @@ class AWSSession:
         """
         return self.sync_session.client(service)
 
-    def get_async_client(self, service: str) -> any:
+    def get_async_client(self, service: str) -> Any:
         """Get asynchronous aioboto3 client context manager.
 
         Args:
